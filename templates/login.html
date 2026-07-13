@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+font-family:'Poppins',sans-serif;
+
+background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+
+background-size:300% 300%;
+
+animation:bgMove 12s ease infinite;
+
+height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+overflow:hidden;
+
+}
+
+@keyframes bgMove{
+
+0%{background-position:0% 50%;}
+
+50%{background-position:100% 50%;}
+
+100%{background-position:0% 50%;}
+
+}
+
+.login-card{
+
+width:430px;
+
+padding:30px 40px;
+
+max-height:90vh;
+
+overflow-y:auto;
+
+background:rgba(255,255,255,.08);
+
+backdrop-filter:blur(18px);
+
+border-radius:20px;
+
+border:1px solid rgba(255,255,255,.15);
+
+box-shadow:
+0 15px 40px rgba(0,0,0,.45),
+0 0 35px rgba(37,99,235,.25);
+
+animation:fadeUp .7s ease;
+
+}
+
+@keyframes fadeUp{
+
+from{
+
+opacity:0;
+
+transform:translateY(30px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+.logo{
+
+width:130px;
+
+display:block;
+
+margin:auto;
+
+margin-bottom:12px;
+
+}
+
+.title{
+
+text-align:center;
+
+font-size:38px;
+
+font-weight:600;
+
+color:white;
+
+margin-bottom:6px;
+
+}
+
+.subtitle{
+
+text-align:center;
+
+color:#dbeafe;
+
+margin-bottom:22px;
+
+font-size:15px;
+
+}
+
+form{
+
+display:flex;
+
+flex-direction:column;
+
+gap:16px;
+
+}
+
+.input-group{
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+.input-group label{
+
+margin-bottom:7px;
+
+font-size:14px;
+
+font-weight:500;
+
+color:white;
+
+}
+
+input{
+
+width:100%;
+
+padding:14px 16px;
+
+border:none;
+
+border-radius:12px;
+
+background:rgba(255,255,255,.12);
+
+color:white;
+
+font-size:15px;
+
+transition:.3s;
+
+}
+
+input::placeholder{
+
+color:#d1d5db;
+
+}
+
+input:focus{
+
+outline:none;
+
+background:rgba(255,255,255,.18);
+
+box-shadow:0 0 15px rgba(96,165,250,.8);
+
+}
+
+button{
+
+padding:14px;
+
+border:none;
+
+border-radius:12px;
+
+background:linear-gradient(90deg,#2563eb,#3b82f6);
+
+color:white;
+
+font-size:16px;
+
+font-weight:600;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+button:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 8px 18px rgba(59,130,246,.45);
+
+}
+
+.signup-text{
+
+margin-top:18px;
+
+text-align:center;
+
+color:white;
+
+font-size:14px;
+
+}
+
+.signup-text a{
+
+color:#93c5fd;
+
+text-decoration:none;
+
+font-weight:600;
+
+}
+
+.signup-text a:hover{
+
+color:white;
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+<img
+src="{{ url_for('static', filename='images/logo.png') }}"
+class="logo"
+alt="Innominds Logo">
+
+<h1 class="title">
+Welcome Back
+</h1>
+
+<p class="subtitle">
+Leave & Asset Tracker Portal
+</p>
+
+<form method="POST">
+
+<div class="input-group">
+
+<label>
+Username
+</label>
+
+<input
+type="text"
+name="username"
+placeholder="Enter Username"
+required>
+
+</div>
+
+<div class="input-group">
+
+<label>
+Password
+</label>
+
+<input
+type="password"
+name="password"
+placeholder="Enter Password"
+required>
+
+</div>
+
+<button type="submit">
+
+Login
+
+</button>
+
+</form>
+
+<div class="signup-text">
+
+Don't have an account?
+
+<a href="{{ url_for('signup') }}">
+
+Create Account
+
+</a>
+
+</div>
+
+</div>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<div id="toast"
+class="{% if 'success' in messages[0]|lower or 'successful' in messages[0]|lower %}toast success{% else %}toast error{% endif %}">
+
+{{ messages[0] }}
+
+</div>
+
+<style>
+
+.toast{
+
+position:fixed;
+
+top:30px;
+
+right:30px;
+
+padding:15px 24px;
+
+border-radius:12px;
+
+font-family:Poppins;
+
+font-size:14px;
+
+font-weight:500;
+
+color:white;
+
+box-shadow:0 12px 30px rgba(0,0,0,.35);
+
+z-index:99999;
+
+animation:slideIn .45s ease;
+
+}
+
+.success{
+
+background:linear-gradient(90deg,#16a34a,#22c55e);
+
+}
+
+.error{
+
+background:linear-gradient(90deg,#dc2626,#ef4444);
+
+}
+
+@keyframes slideIn{
+
+from{
+
+opacity:0;
+
+transform:translateX(120px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateX(0);
+
+}
+
+}
+
+@keyframes slideOut{
+
+to{
+
+opacity:0;
+
+transform:translateX(120px);
+
+}
+
+}
+
+</style>
+
+<script>
+
+setTimeout(function(){
+
+let toast=document.getElementById("toast");
+
+toast.style.animation="slideOut .45s forwards";
+
+},2500);
+
+</script>
+
+{% endif %}
+{% endwith %}
+
+</body>
+</html>

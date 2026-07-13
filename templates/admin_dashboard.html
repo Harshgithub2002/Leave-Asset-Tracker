@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+/* LOGIN POPUP ANIMATION */
+
+@keyframes slideIn{
+
+from{
+
+transform:translateX(100%);
+
+opacity:0;
+
+}
+
+to{
+
+transform:translateX(0);
+
+opacity:1;
+
+}
+
+}
+
+
+body{
+margin:0;
+font-family:Poppins;
+background: radial-gradient(circle at top,#1f2937,#000);
+color:white;
+display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:220px;
+height:100vh;
+background:rgba(255,255,255,0.05);
+backdrop-filter: blur(10px);
+padding:20px;
+position:fixed;
+}
+
+.sidebar h2{
+margin-bottom:30px;
+}
+
+.sidebar a{
+display:block;
+padding:10px;
+margin-bottom:10px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+transition:0.3s;
+}
+
+.sidebar a:hover{
+background:#2563eb;
+box-shadow:0 0 10px #2563eb;
+}
+
+/* MAIN */
+
+.main{
+margin-left:220px;
+width:calc(100% - 220px);
+padding:30px;
+}
+
+/* TOPBAR */
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+/* SEARCH BAR */
+
+.search-container{
+width:350px;
+position:relative;
+}
+
+.search-input{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:#1e3a8a;
+color:white;
+font-size:15px;
+}
+
+.search-input:focus{
+outline:none;
+box-shadow:0 0 10px #2563eb;
+}
+
+/* DROPDOWN */
+
+.dropdown-list{
+position:absolute;
+top:50px;
+left:0;
+width:100%;
+background:#111827;
+border-radius:10px;
+overflow:hidden;
+max-height:220px;
+overflow-y:auto;
+display:none;
+z-index:1000;
+box-shadow:0 0 15px rgba(37,99,235,0.5);
+}
+
+.dropdown-item{
+padding:12px;
+cursor:pointer;
+transition:0.3s;
+border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.dropdown-item:hover{
+background:#2563eb;
+}
+
+/* NOTIFICATION BELL */
+
+.notification-container{
+position:relative;
+}
+
+.bell-icon{
+position:relative;
+font-size:28px;
+text-decoration:none;
+color:white;
+padding:10px 15px;
+border-radius:12px;
+background:rgba(255,255,255,0.05);
+transition:0.3s;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.bell-icon:hover{
+background:#2563eb;
+box-shadow:0 0 15px #2563eb;
+}
+
+.notification-count{
+position:absolute;
+top:-5px;
+right:-5px;
+background:red;
+color:white;
+font-size:12px;
+font-weight:bold;
+min-width:20px;
+height:20px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:2px;
+box-shadow:0 0 10px red;
+}
+
+/* CARD */
+
+.card{
+background:rgba(255,255,255,0.05);
+padding:25px;
+border-radius:15px;
+margin-bottom:20px;
+backdrop-filter: blur(10px);
+transition:0.3s;
+}
+
+.card:hover{
+box-shadow:0 0 20px rgba(37,99,235,0.4);
+}
+
+/* STATS GRID */
+
+.stats-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+margin-top:20px;
+}
+
+/* STAT BOX */
+
+.stat-box{
+background:rgba(255,255,255,0.05);
+padding:25px;
+border-radius:15px;
+backdrop-filter: blur(10px);
+transition:0.3s;
+border-left:5px solid #2563eb;
+min-height:520px;
+}
+
+.stat-box:hover{
+transform:translateY(-5px);
+box-shadow:0 0 20px rgba(37,99,235,0.4);
+}
+
+.stat-title{
+font-size:22px;
+margin-bottom:20px;
+font-weight:bold;
+color:#60a5fa;
+}
+
+.stat-label{
+font-size:15px;
+color:#cbd5e1;
+margin-top:15px;
+}
+
+.stat-value{
+font-size:34px;
+font-weight:bold;
+margin-top:5px;
+}
+
+/* CHART SECTION */
+
+.chart-section{
+margin-top:30px;
+display:none;
+}
+
+.chart-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+.chart-card{
+background:rgba(255,255,255,0.05);
+padding:20px;
+border-radius:15px;
+backdrop-filter: blur(10px);
+}
+
+.chart-title{
+font-size:20px;
+margin-bottom:20px;
+font-weight:bold;
+color:#60a5fa;
+text-align:center;
+}
+
+canvas{
+max-width:100%;
+height:350px !important;
+}
+
+/* NOTIFICATION SECTION */
+
+.notification-box{
+background:rgba(255,255,255,0.05);
+padding:20px;
+border-radius:15px;
+margin-top:30px;
+border-left:5px solid #facc15;
+}
+
+.notification-title{
+font-size:22px;
+margin-bottom:15px;
+font-weight:bold;
+color:#facc15;
+}
+
+.notification-item{
+padding:14px;
+margin-bottom:10px;
+background:rgba(255,255,255,0.05);
+border-radius:10px;
+font-size:16px;
+}
+
+.pending-count{
+color:#facc15;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+<!-- LOGIN SUCCESS POPUP -->
+
+{% if session.get('admin_login_success') %}
+
+
+<div id="loginPopup" style="
+position:fixed;
+top:30px;
+right:30px;
+background:#22c55e;
+color:white;
+padding:15px 25px;
+border-radius:12px;
+font-size:16px;
+font-weight:bold;
+box-shadow:0 0 20px rgba(34,197,94,0.6);
+z-index:9999;
+animation:slideIn 0.5s ease;
+">
+
+✅ Login Successful
+
+</div>
+{% endif %}
+<!--&lt;!&ndash; LOGIN SUCCESS POPUP &ndash;&gt;-->
+
+<!--{% if session.get('admin_login_success') %}-->
+
+<!--<script>-->
+
+<!--window.onload = function(){-->
+
+<!--alert("Login Successful");-->
+
+<!--};-->
+
+<!--</script>-->
+
+<!--{% set _ = session.pop('admin_login_success') %}-->
+
+<!--{% endif %}-->
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h2>Admin Panel</h2>
+
+<a href="{{ url_for('admin_dashboard') }}">
+Dashboard
+</a>
+
+<a href="{{ url_for('admin_requests') }}">
+Requests
+</a>
+
+<a href="{{ url_for('admin_users') }}">
+Users
+</a>
+
+<a href="{{ url_for('admin_reports') }}">
+    Reports
+</a>
+
+<a href="{{ url_for('logout') }}">
+Logout
+</a>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<!-- TOPBAR -->
+
+<div class="topbar">
+
+<div class="search-container">
+
+<input
+type="text"
+id="userSearch"
+class="search-input"
+placeholder="Search Username, Skillset, Certification..."
+autocomplete="off"
+onkeyup="filterUsers()"
+onclick="showDropdown()"
+oninput="blockMultipleCommas(this)"
+>
+
+<div class="dropdown-list" id="dropdownList"></div>
+</div>
+
+<div class="notification-container">
+
+<a href="{{ url_for('admin_requests') }}" class="bell-icon">
+
+🔔
+
+{% if pending_count > 0 %}
+<span class="notification-count">
+{{ pending_count }}
+</span>
+{% endif %}
+
+</a>
+
+</div>
+
+</div>
+
+<!-- WELCOME -->
+
+<div class="card">
+
+<h1>
+Welcome Admin
+</h1>
+
+
+</div>
+
+<!-- STATS -->
+
+<div class="card">
+
+<h3>Filter Leave / WFH Data</h3>
+
+<select id="filterYear" onchange="updateDateDropdown()">
+<option value="">All Years</option>
+<option value="2026">2026</option>
+<option value="2027">2027</option>
+</select>
+
+<select id="filterMonth" onchange="updateDateDropdown()">
+<option value="">All Months</option>
+<option value="01">January</option>
+<option value="02">February</option>
+<option value="03">March</option>
+<option value="04">April</option>
+<option value="05">May</option>
+<option value="06">June</option>
+<option value="07">July</option>
+<option value="08">August</option>
+<option value="09">September</option>
+<option value="10">October</option>
+<option value="11">November</option>
+<option value="12">December</option>
+</select>
+
+<select id="filterDate">
+<option value="">All Dates</option>
+
+{% for i in range(1,32) %}
+<option value="{{ '%02d'|format(i) }}">
+{{ i }}
+</option>
+{% endfor %}
+
+</select>
+
+<select id="filterPeriod">
+<option value="">All Periods</option>
+<option value="Q1">Quarter 1</option>
+<option value="Q2">Quarter 2</option>
+<option value="Q3">Quarter 3</option>
+<option value="Q4">Quarter 4</option>
+<option value="H1">Half Yearly 1</option>
+<option value="H2">Half Yearly 2</option>
+</select>
+
+<button
+type="button"
+onclick="applyDashboardFilter()"
+style="
+width:auto;
+padding:10px 25px;
+margin-left:10px;
+"
+>
+Filter
+</button>
+
+<button
+type="button"
+onclick="resetDashboardFilter()"
+style="
+width:auto;
+padding:10px 25px;
+margin-left:10px;
+background:#dc2626;
+"
+>
+Reset
+</button>
+
+</div>
+<div class="stats-grid" id="statsGrid">
+
+<!-- LEAVES -->
+
+<div class="stat-box">
+
+<div class="stat-title">
+Leaves
+</div>
+
+<div class="stat-label">
+Total Leaves
+</div>
+
+<div class="stat-value" id="totalLeavesValue">
+
+{{
+requests
+| selectattr('request_type','equalto','Leave')
+| map(attribute='leave_days', default=0)
+| sum
+}}
+
+</div>
+
+<div class="stat-label">
+Approved Leaves
+</div>
+
+<div class="stat-value" id="approvedLeavesValue">
+
+{{
+requests
+| selectattr('request_type','equalto','Leave')
+| selectattr('status','equalto','Accepted')
+| map(attribute='leave_days', default=0)
+| sum
+}}
+
+</div>
+
+<div class="stat-label">
+Approval Pending
+</div>
+
+<div class="stat-value" id="pendingLeavesValue">
+
+{{
+requests
+| selectattr('request_type','equalto','Leave')
+| selectattr('status','equalto','Pending')
+| map(attribute='leave_days', default=0)
+| sum
+}}
+
+</div>
+<div class="stat-label">
+Rejected Leaves
+</div>
+
+<div class="stat-value" id="rejectedLeavesValue">
+
+{{
+requests
+| selectattr('request_type','equalto','Leave')
+| selectattr('status','equalto','Rejected')
+| map(attribute='leave_days', default=0)
+| sum
+}}
+
+</div>
+</div>
+
+<!-- WFH -->
+
+<div class="stat-box">
+
+<div class="stat-title">
+WFH
+</div>
+
+<div class="stat-label">
+Total WFH
+</div>
+
+<div class="stat-value" id="totalWFHValue">
+
+{{
+requests
+| selectattr('request_type','equalto','WFH')
+| map(attribute='leave_days', default=0)
+| sum
+}}
+
+</div>
+
+<div class="stat-label">
+Approved WFH
+</div>
+
+<div class="stat-value" id="approvedWFHValue">
+
+{{
+requests
+| selectattr('request_type','equalto','WFH')
+| selectattr('status','equalto','Accepted')
+| map(attribute='leave_days', default=0)
+| sum
+}}
+
+</div>
+
+<div class="stat-label">
+Approval Pending
+</div>
+
+<div class="stat-value" id="pendingWFHValue">
+
+{{
+requests
+| selectattr('request_type','equalto','WFH')
+| selectattr('status','equalto','Pending')
+| map(attribute='leave_days', default=0)
+| sum
+}}
+
+</div>
+
+<div class="stat-label">
+Rejected WFH
+</div>
+<div class="stat-value" id="rejectedWFHValue">
+
+{{
+requests
+| selectattr('request_type','equalto','WFH')
+| selectattr('status','equalto','Rejected')
+| map(attribute='leave_days', default=0)
+| sum
+}}
+
+</div>
+</div>
+
+
+
+
+</div>
+
+<!-- USER PROFILE CARD -->
+
+<div id="userProfileCard" class="card" style="display:none;">
+
+<div style="text-align:center;">
+
+<img
+
+id="profilePhoto"
+
+src=""
+
+style="
+
+width:140px;
+
+height:140px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+border:4px solid #2563eb;
+
+margin-bottom:15px;
+
+"
+>
+
+<h2 id="profileUsername"></h2>
+
+</div>
+
+<div style="
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:30px;
+
+margin-top:20px;
+
+">
+
+<div>
+
+<p><b>Employee ID:</b> <span id="empId"></span></p>
+
+<p><b>Desk Number:</b> <span id="deskNo"></span></p>
+
+<p><b>PC PTag:</b> <span id="pcPtag"></span></p>
+
+<p><b>Monitor PTag:</b> <span id="monitorPtag"></span></p>
+
+<p><b>Skillset:</b> <span id="skillset"></span></p>
+
+<p><b>Experience:</b> <span id="experience"></span></p>
+
+</div>
+
+<div>
+
+<p>
+<b>Resume:</b>
+<a
+
+id="resumeLink"
+
+href="#"
+
+target="_blank"
+
+download
+
+style="color:#60a5fa;"
+>
+
+Download Resume
+</a>
+</p>
+
+<p>
+<b>Certificates:</b>
+
+<div id="certificateLinks"></div>
+
+</p>
+
+<p>
+<b>Certification:</b>
+<span id="certification"></span>
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- CHART SECTION -->
+
+<div class="chart-section" id="chartSection">
+
+<div class="chart-grid">
+
+<!-- LEAVE CHART -->
+
+<div class="chart-card">
+
+<div class="chart-title">
+Leave Analytics
+</div>
+
+<canvas id="leaveChart"></canvas>
+
+</div>
+
+<!-- WFH CHART -->
+
+<div class="chart-card">
+
+<div class="chart-title">
+WFH Analytics
+</div>
+
+<canvas id="wfhChart"></canvas>
+
+</div>
+
+</div>
+<!-- REPORTS -->
+
+<div id="reports" class="section card">
+
+<h2>Reports</h2>
+
+<div style="
+display:flex;
+gap:20px;
+justify-content:center;
+margin-top:30px;
+">
+
+<button
+style="width:180px;"
+onclick="openReport('HLOS')">
+HLOS
+</button>
+
+<button
+style="width:180px;"
+onclick="openReport('NHLOS')">
+NHLOS
+</button>
+
+<button
+style="width:180px;"
+onclick="openReport('QA')">
+QA
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<script>
+
+function applyDashboardFilter(){
+
+let year =
+document.getElementById("filterYear").value;
+
+let month =
+document.getElementById("filterMonth").value;
+
+let day =
+document.getElementById("filterDate").value;
+
+let period =
+document.getElementById("filterPeriod").value;
+
+let filteredRequests =
+allRequests.filter(r => {
+
+let date =
+r.from_date;
+
+if(!date){
+return false;
+}
+
+let parts = date.split("-");
+
+let y = parts[0];
+let m = parts[1];
+let d = parts[2];
+
+if(year && y !== year){
+return false;
+}
+
+if(month && m !== month){
+return false;
+}
+
+if(day && d !== day){
+return false;
+}
+
+if(period){
+
+let monthNum = parseInt(m);
+
+if(period === "Q1" &&
+!(monthNum >=1 && monthNum <=3))
+return false;
+
+if(period === "Q2" &&
+!(monthNum >=4 && monthNum <=6))
+return false;
+
+if(period === "Q3" &&
+!(monthNum >=7 && monthNum <=9))
+return false;
+
+if(period === "Q4" &&
+!(monthNum >=10 && monthNum <=12))
+return false;
+
+if(period === "H1" &&
+!(monthNum >=1 && monthNum <=6))
+return false;
+
+if(period === "H2" &&
+!(monthNum >=7 && monthNum <=12))
+return false;
+
+}
+
+return true;
+
+});
+
+/* LEAVES */
+
+let totalLeaves =
+filteredRequests
+.filter(r => r.request_type==="Leave")
+.reduce((sum,r)=>sum+Number(r.leave_days||0),0);
+
+let approvedLeaves =
+filteredRequests
+.filter(r =>
+r.request_type==="Leave" &&
+r.status==="Accepted"
+)
+.reduce((sum,r)=>sum+Number(r.leave_days||0),0);
+
+let pendingLeaves =
+filteredRequests
+.filter(r =>
+r.request_type==="Leave" &&
+r.status==="Pending"
+)
+.reduce((sum,r)=>sum+Number(r.leave_days||0),0);
+
+let rejectedLeaves =
+filteredRequests
+.filter(r =>
+r.request_type==="Leave" &&
+r.status==="Rejected"
+)
+.reduce((sum,r)=>sum+Number(r.leave_days||0),0);
+
+/* WFH */
+
+let totalWFH =
+filteredRequests
+.filter(r => r.request_type==="WFH")
+.reduce((sum,r)=>sum+Number(r.leave_days||0),0);
+
+let approvedWFH =
+filteredRequests
+.filter(r =>
+r.request_type==="WFH" &&
+r.status==="Accepted"
+)
+.reduce((sum,r)=>sum+Number(r.leave_days||0),0);
+
+let pendingWFH =
+filteredRequests
+.filter(r =>
+r.request_type==="WFH" &&
+r.status==="Pending"
+)
+.reduce((sum,r)=>sum+Number(r.leave_days||0),0);
+
+let rejectedWFH =
+filteredRequests
+.filter(r =>
+r.request_type==="WFH" &&
+r.status==="Rejected"
+)
+.reduce((sum,r)=>sum+Number(r.leave_days||0),0);
+
+/* UPDATE UI */
+
+document.getElementById(
+"totalLeavesValue"
+).innerText = totalLeaves;
+
+document.getElementById(
+"approvedLeavesValue"
+).innerText = approvedLeaves;
+
+document.getElementById(
+"pendingLeavesValue"
+).innerText = pendingLeaves;
+
+document.getElementById(
+"rejectedLeavesValue"
+).innerText = rejectedLeaves;
+
+document.getElementById(
+"totalWFHValue"
+).innerText = totalWFH;
+
+document.getElementById(
+"approvedWFHValue"
+).innerText = approvedWFH;
+
+document.getElementById(
+"pendingWFHValue"
+).innerText = pendingWFH;
+
+document.getElementById(
+"rejectedWFHValue"
+).innerText = rejectedWFH;
+
+}
+
+function resetDashboardFilter(){
+
+document.getElementById(
+"filterYear"
+).value = "";
+
+document.getElementById(
+"filterMonth"
+).value = "";
+
+document.getElementById(
+"filterDate"
+).value = "";
+
+document.getElementById(
+"filterPeriod"
+).value = "";
+
+updateDateDropdown();
+applyDashboardFilter();
+
+}
+function updateDateDropdown(){
+
+    const year = document.getElementById("filterYear").value;
+    const month = document.getElementById("filterMonth").value;
+
+    const dateDropdown =
+    document.getElementById("filterDate");
+
+    dateDropdown.innerHTML =
+    '<option value="">All Dates</option>';
+
+    // If month or year not selected, show 1-31
+    if(year === "" || month === ""){
+
+        for(let i=1;i<=31;i++){
+
+            let day =
+            String(i).padStart(2,"0");
+
+            dateDropdown.innerHTML +=
+            `<option value="${day}">${i}</option>`;
+
+        }
+
+        return;
+    }
+
+    // Automatically gets correct number of days
+    const daysInMonth =
+    new Date(parseInt(year), parseInt(month), 0).getDate();
+
+    for(let i=1;i<=daysInMonth;i++){
+
+        let day =
+        String(i).padStart(2,"0");
+
+        dateDropdown.innerHTML +=
+        `<option value="${day}">${i}</option>`;
+
+    }
+
+}
+
+const allRequests = {{ requests | tojson }};
+const allUsers = {{ users | tojson }};
+console.log(allUsers);
+
+let leaveChart = null;
+let wfhChart = null;
+
+/* UNIQUE USERNAMES */
+const usernames = [...new Set(
+    allUsers.map(user => user.username)
+)];
+
+/* SHOW DROPDOWN */
+function showDropdown() {
+
+    document.getElementById("dropdownList").style.display = "block";
+
+    filterUsers();
+}
+
+function normalizeText(text){
+
+    return String(text || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+}
+function blockMultipleCommas(field){
+
+    let value = field.value;
+
+    // Multiple spaces -> single space
+    value = value.replace(/\s{2,}/g," ");
+
+    // Multiple commas -> single comma
+    value = value.replace(/,+/g,",");
+
+    // Remove spaces before comma
+    value = value.replace(/\s+,/g,",");
+
+    // Exactly one space after comma
+    value = value.replace(/,\s*/g,", ");
+
+    // Remove comma at beginning
+    value = value.replace(/^,/,"");
+
+    field.value = value;
+
+}
+/* FILTER USERS */
+function filterUsers() {
+
+    const input = document
+
+.getElementById("userSearch")
+
+.value
+
+.trim();
+
+const normalizedInput = normalizeText(input);
+
+const searchWords = input
+
+.toLowerCase()
+
+.split(/\s+/)
+
+.filter(word => word)
+
+.map(word => normalizeText(word));
+const dropdown = document.getElementById("dropdownList");
+dropdown.innerHTML = "";
+
+
+    const filteredUsers = allUsers.filter(user => {
+
+        const username =
+normalizeText(user.username || "");
+
+const skillset =
+normalizeText(user.skillset || "");
+
+const certification =
+normalizeText(user.certification || "");
+
+const experience =
+normalizeText(user.experience || "");
+        let uploadedCertificates = "";
+
+if(user.certificate_files){
+
+    user.certificate_files.forEach(function(cert){
+
+        if(typeof cert === "object"){
+
+            uploadedCertificates += normalizeText(cert.file) + " ";
+
+        }else{
+
+            uploadedCertificates += normalizeText(cert) + " ";
+
+        }
+
+    });
+
+}
+        if(username.includes(normalizedInput)){
+            return true;
+        }
+
+        let searchableText = [
+    username,
+    skillset,
+    certification,
+    experience,
+    uploadedCertificates
+].join(" ");
+
+let searchableCompact = searchableText.replace(/[^a-z0-9]/g, "");
+
+let words = normalizedInput
+    .replace(/,/g, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+
+// Handle searches like "pythonc"
+if(words.length === 1){
+
+    let query = words[0];
+
+    // If the whole compact string matches
+    if(searchableCompact.includes(query)){
+        return true;
+    }
+
+    // Split the query against known keywords
+    const keywords = searchableText.split(/\s+/).filter(Boolean);
+
+    return keywords.every(k => query.includes(k) || k.includes(query));
+}
+
+// Handle searches like "c python", "python c", "python,c"
+return words.every(word =>
+    searchableText.includes(word)
+);
+
+    });
+
+    if(filteredUsers.length === 0){
+        dropdown.style.display = "none";
+        return;
+    }
+
+    dropdown.style.display = "block";
+
+    filteredUsers.forEach(user => {
+
+        const item =
+        document.createElement("div");
+
+        item.classList.add("dropdown-item");
+
+        const username =
+normalizeText(user.username || "");
+
+const skillset =
+normalizeText(user.skillset || "");
+
+const certification =
+normalizeText(user.certification || "");
+
+const experience =
+normalizeText(user.experience || "");
+
+        if(username.includes(normalizedInput)){
+
+            item.innerHTML =
+            `<b>${user.username}</b>`;
+
+        }else{
+
+            let matchedKeywords = [];
+
+            searchWords.forEach(word => {
+
+                if(skillset.includes(word)){
+                    matchedKeywords.push(word);
+                }
+
+                if(certification.includes(word)){
+                    matchedKeywords.push(word);
+                }
+
+                if(experience.includes(word)){
+                    matchedKeywords.push(word);
+                }
+
+            });
+
+            matchedKeywords =
+            [...new Set(matchedKeywords)];
+
+            item.innerHTML = `
+            <b>${user.username}</b><br>
+            <small style="color:#60a5fa;">
+            ${matchedKeywords.join(", ")}
+            </small>
+            `;
+        }
+
+        item.onclick = function(){
+
+            document.getElementById("userSearch").value =
+            user.username;
+
+            dropdown.style.display = "none";
+
+            generateCharts();
+        };
+
+        dropdown.appendChild(item);
+
+    });
+
+}
+/* CLOSE DROPDOWN WHEN CLICKING OUTSIDE */
+document.addEventListener("click", function(e){
+
+    if(!e.target.closest(".search-container")){
+
+        document.getElementById("dropdownList").style.display = "none";
+    }
+});
+
+function generateCharts(){
+
+const username =
+normalizeText(
+document.getElementById("userSearch").value
+);
+
+/* HIDE CHARTS & SHOW TABLES WHEN SEARCH EMPTY */
+
+if(username === ""){
+document.getElementById(
+"chartSection"
+).style.display = "none";
+document.getElementById(
+"statsGrid"
+).style.display = "grid";
+document.getElementById(
+"userProfileCard"
+).style.display = "none";
+return;
+}
+
+/* SHOW CHARTS & HIDE TABLES WHEN SEARCHING */
+
+document.getElementById(
+"chartSection"
+).style.display = "block";
+
+document.getElementById(
+"statsGrid"
+).style.display = "none";
+
+const userData = allUsers.find(
+u => normalizeText(u.username) === username
+);
+/* USER REQUESTS */
+
+const userRequests = allRequests.filter(
+r => r.username &&
+normalizeText(r.username) === username
+);
+
+console.log(userRequests);
+
+if(userData){
+
+document.getElementById(
+"userProfileCard"
+).style.display = "block";
+
+let profileUsername =
+document.getElementById("profileUsername");
+
+let empId =
+document.getElementById("empId");
+
+let deskNo =
+document.getElementById("deskNo");
+
+let pcPtag =
+document.getElementById("pcPtag");
+
+let monitorPtag =
+document.getElementById("monitorPtag");
+
+let skillset =
+document.getElementById("skillset");
+
+let experience =
+document.getElementById("experience");
+
+let certification =
+document.getElementById("certification");
+
+if(profileUsername)
+profileUsername.innerText =
+userData.username || "";
+
+if(empId)
+empId.innerText =
+userData.employee_id || "";
+
+if(deskNo)
+deskNo.innerText =
+userData.desk_number || "";
+
+if(pcPtag)
+pcPtag.innerText =
+userData.pc_ptag || "";
+
+if(monitorPtag)
+monitorPtag.innerText =
+userData.monitor_ptag || "";
+
+if(skillset)
+skillset.innerText =
+userData.skillset || "";
+
+if(experience)
+experience.innerText =
+userData.experience || "";
+
+if(certification)
+certification.innerText =
+userData.certification || "";
+
+let photo =
+document.getElementById("profilePhoto");
+
+if(photo){
+
+if(userData.employee_photo){
+
+photo.src =
+"/static/uploads/photos/" +
+userData.employee_photo;
+
+}else{
+
+photo.src =
+"https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+}
+
+}
+
+let resume =
+document.getElementById("resumeLink");
+
+if(resume && userData.resume){
+
+resume.href =
+"/static/uploads/resumes/" +
+userData.resume;
+
+}
+
+}
+// =============================
+// CERTIFICATES
+// =============================
+
+let certificateDiv =
+document.getElementById("certificateLinks");
+
+certificateDiv.innerHTML = "";
+
+if(userData.certificate_files){
+
+userData.certificate_files.forEach(function(cert){
+
+let div = document.createElement("div");
+div.style.marginBottom = "12px";
+
+let link = document.createElement("a");
+
+link.href =
+"/static/uploads/certificates/" + cert.file;
+
+link.target = "_blank";
+
+link.download = "";
+
+link.style.color = "#60a5fa";
+
+link.innerText = cert.file;
+
+div.appendChild(link);
+
+div.appendChild(document.createElement("br"));
+
+if(cert.status == "Pending"){
+
+let approveBtn = document.createElement("button");
+
+approveBtn.innerText = "Approve";
+
+approveBtn.style.marginRight = "10px";
+
+approveBtn.onclick = function(){
+
+window.location =
+"/approve_certificate/" +
+userData.username + "/" +
+cert.file;
+
+};
+
+div.appendChild(approveBtn);
+
+let rejectBtn = document.createElement("button");
+
+rejectBtn.innerText = "Reject";
+
+rejectBtn.style.background = "#dc2626";
+
+rejectBtn.onclick = function(){
+
+window.location =
+"/reject_certificate/" +
+userData.username + "/" +
+cert.file;
+
+};
+
+div.appendChild(rejectBtn);
+
+}
+
+else if(cert.status == "Approved"){
+
+let status = document.createElement("span");
+
+status.style.color = "lightgreen";
+
+status.style.fontWeight = "bold";
+
+status.innerText = " Approved";
+
+div.appendChild(status);
+
+}
+
+else{
+
+let status = document.createElement("span");
+
+status.style.color = "red";
+
+status.style.fontWeight = "bold";
+
+status.innerText = " Rejected";
+
+div.appendChild(status);
+
+}
+
+certificateDiv.appendChild(div);
+
+});
+
+}
+
+/* ==========================
+   LEAVE COUNTS
+========================== */
+
+let totalLeaves = userRequests
+.filter(r => r.request_type === "Leave")
+.reduce((sum, r) => sum + Number(r.leave_days || 0), 0);
+
+let approvedLeaves = userRequests
+.filter(r =>
+r.request_type === "Leave" &&
+r.status === "Accepted"
+)
+.reduce((sum, r) => sum + Number(r.leave_days || 0), 0);
+
+let pendingLeaves = userRequests
+.filter(r =>
+r.request_type === "Leave" &&
+r.status === "Pending"
+)
+.reduce((sum, r) => sum + Number(r.leave_days || 0), 0);
+
+
+/* ==========================
+   WFH COUNTS
+========================== */
+
+let totalWFH = userRequests
+.filter(r => r.request_type === "WFH")
+.reduce((sum, r) => sum + Number(r.leave_days || 0), 0);
+
+let approvedWFH = userRequests
+.filter(r =>
+r.request_type === "WFH" &&
+r.status === "Accepted"
+)
+.reduce((sum, r) => sum + Number(r.leave_days || 0), 0);
+
+let pendingWFH = userRequests
+.filter(r =>
+r.request_type === "WFH" &&
+r.status === "Pending"
+)
+.reduce((sum, r) => sum + Number(r.leave_days || 0), 0);
+
+
+let rejectedLeaves = userRequests
+.filter(r =>
+r.request_type === "Leave" &&
+r.status === "Rejected"
+)
+.reduce((sum, r) => sum + Number(r.leave_days || 0), 0);
+
+let rejectedWFH = userRequests
+.filter(r =>
+r.request_type === "WFH" &&
+r.status === "Rejected"
+)
+.reduce((sum, r) => sum + Number(r.leave_days || 0), 0);
+
+/* DESTROY OLD CHARTS */
+if(
+totalLeaves === 0 &&
+approvedLeaves === 0 &&
+pendingLeaves === 0 &&
+totalWFH === 0 &&
+approvedWFH === 0 &&
+pendingWFH === 0
+){
+return;
+}
+
+if(leaveChart){
+leaveChart.destroy();
+}
+
+if(wfhChart){
+wfhChart.destroy();
+}
+
+/* LEAVE DONUT */
+
+leaveChart = new Chart(
+document.getElementById("leaveChart"),
+{
+type:'doughnut',
+
+data:{
+labels:[
+'Total Leaves Applied',
+'Approved Leaves',
+'Pending Leave Approval',
+'Rejected Leaves'
+],
+
+datasets:[{
+data:[
+totalLeaves,
+approvedLeaves,
+pendingLeaves,
+rejectedLeaves
+],
+
+backgroundColor:[
+'#3b82f6',
+'#22c55e',
+'#facc15',
+'#ef4444'
+],
+borderWidth:0
+}]
+},
+
+options:{
+responsive:true,
+plugins:{
+legend:{
+labels:{
+color:'white'
+}
+}
+}
+}
+}
+);
+
+/* WFH DONUT */
+
+wfhChart = new Chart(
+document.getElementById("wfhChart"),
+{
+type:'doughnut',
+
+data:{
+labels:[
+'Total WFH Applied',
+'Approved WFH',
+'Pending WFH Approval',
+'Rejected WFH'
+],
+
+datasets:[{
+data:[
+totalWFH,
+approvedWFH,
+pendingWFH,
+rejectedWFH
+],
+
+backgroundColor:[
+'#8b5cf6',
+'#22c55e',
+'#f97316',
+'#ef4444'
+],
+
+borderWidth:0
+}]
+},
+
+options:{
+responsive:true,
+plugins:{
+legend:{
+labels:{
+color:'white'
+}
+}
+}
+}
+}
+);
+
+}
+function openReport(team){
+
+    alert(team + " Report will open here.");
+
+}
+
+
+</script>
+
+</body>
+</html>

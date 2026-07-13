@@ -1,0 +1,198 @@
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f5f7fb;
+}
+
+/* ===== LAYOUT WRAPPER ===== */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width: 240px;
+    background: linear-gradient(180deg, #6366f1, #a78bfa);
+    color: white;
+    padding: 30px 20px;
+    position: fixed;
+    height: 100vh;
+}
+
+.sidebar h2 {
+    margin-bottom: 40px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: white;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* ===== MAIN AREA ===== */
+.main {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== TOPBAR ===== */
+.topbar {
+    height: 70px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    border-bottom: 1px solid #eee;
+}
+
+/* ===== CONTENT AREA ===== */
+.content-wrapper {
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.content {
+    width: 100%;
+    max-width: 1100px;
+}
+
+/* ===== CARD ===== */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+/* ===== BUTTONS ===== */
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.primary-btn {
+    background: #6366f1;
+    color: white;
+    margin-right: 10px;
+}
+
+.primary-btn:hover {
+    background: #4f46e5;
+}
+
+.success-btn {
+    background: #10b981;
+    color: white;
+}
+
+.danger-btn {
+    background: #ef4444;
+    color: white;
+}
+
+.logout-btn {
+    background: #374151;
+    color: white;
+}
+
+/* ===== FORM ===== */
+input, select {
+    padding: 12px;
+    width: 100%;
+    margin-top: 12px;
+    margin-bottom: 18px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+/* ===== REQUEST ITEM ===== */
+.request-item {
+    background: #f9fafc;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+}
+.container {
+    width: 90%;
+    margin: auto;
+    margin-top: 40px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.styled-table th {
+    background-color: #222;
+    color: white;
+    padding: 10px;
+}
+
+.styled-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.styled-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #222;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #444;
+}
+.popup-message{
+position:fixed;
+top:20px;
+right:20px;
+background:#16a34a;
+color:white;
+padding:12px 20px;
+border-radius:8px;
+font-weight:600;
+z-index:9999;
+animation:fadeOut 5s forwards;
+}
+
+@keyframes fadeOut{
+0%{opacity:1;}
+80%{opacity:1;}
+100%{opacity:0;}
+}

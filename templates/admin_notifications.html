@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Notifications</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+<style>
+body{
+margin:0;
+font-family:Poppins;
+background: radial-gradient(circle at top,#1f2937,#000);
+color:white;
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:220px;
+height:100vh;
+background:rgba(255,255,255,0.05);
+backdrop-filter: blur(10px);
+padding:20px;
+position:fixed;
+}
+
+.sidebar a{
+display:block;
+padding:10px;
+margin-bottom:10px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+transition:0.3s;
+}
+
+.sidebar a:hover{
+background:#2563eb;
+}
+
+/* MAIN */
+.main{
+margin-left:220px;
+width:calc(100% - 220px);
+padding:30px;
+}
+
+/* CARD */
+.card{
+background:rgba(255,255,255,0.05);
+padding:25px;
+border-radius:15px;
+margin-bottom:20px;
+}
+
+/* TABLE */
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+th,td{
+padding:12px;
+border:1px solid #444;
+text-align:center;
+}
+
+th{
+background:#2563eb;
+}
+
+/* ACTION COLORS */
+.accept{
+color:lightgreen;
+font-weight:bold;
+text-decoration:none;
+}
+
+.reject{
+color:#f87171;
+font-weight:bold;
+text-decoration:none;
+}
+
+/* LONG LEAVE CARD */
+.long-leave-card{
+background:rgba(239,68,68,0.12);
+border:1px solid #ef4444;
+}
+
+.long-leave-title{
+color:#f87171;
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>Admin Panel</h2>
+
+<a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+<a href="{{ url_for('admin_requests') }}">Requests</a>
+<a href="{{ url_for('admin_users') }}">Users</a>
+<a href="{{ url_for('admin_notifications') }}">Notifications</a>
+<a href="{{ url_for('logout') }}">Logout</a>
+
+</div>
+
+<div class="main">
+
+<!-- LONG LEAVE REQUESTS -->
+{% if long_leave_requests %}
+<div class="card long-leave-card">
+
+<h2 class="long-leave-title">
+Manager Approval Required (More Than 3 Days)
+</h2>
+
+<table>
+
+<tr>
+<th>User</th>
+<th>Type</th>
+<th>From</th>
+<th>To</th>
+<th>Total Days</th>
+<th>Action</th>
+</tr>
+
+{% for item in long_leave_requests %}
+<tr>
+
+<td>{{ item.data.username }}</td>
+<td>{{ item.data.request_type }}</td>
+<td>{{ item.data.from_date }}</td>
+<td>{{ item.data.to_date }}</td>
+<td>{{ item.data.leave_days }}</td>
+
+<td>
+
+<a href="{{ url_for('update_request', index=item.index, action='accept') }}" class="accept">
+Accept
+</a>
+
+|
+
+<a href="{{ url_for('update_request', index=item.index, action='reject') }}" class="reject">
+Reject
+</a>
+
+</td>
+
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+{% endif %}
+
+<!-- NORMAL PENDING REQUESTS -->
+<div class="card">
+
+<h2>Pending Requests</h2>
+
+<table>
+
+<tr>
+<th>User</th>
+<th>Type</th>
+<th>From</th>
+<th>To</th>
+<th>Total Days</th>
+<th>Action</th>
+</tr>
+
+{% for item in requests %}
+<tr>
+
+<td>{{ item.data.username }}</td>
+<td>{{ item.data.request_type }}</td>
+<td>{{ item.data.from_date }}</td>
+<td>{{ item.data.to_date }}</td>
+<td>{{ item.data.leave_days }}</td>
+
+<td>
+
+<a href="{{ url_for('update_request', index=item.index, action='accept') }}" class="accept">
+Accept
+</a>
+
+|
+
+<a href="{{ url_for('update_request', index=item.index, action='reject') }}" class="reject">
+Reject
+</a>
+
+</td>
+
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

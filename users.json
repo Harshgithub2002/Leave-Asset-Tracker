@@ -1,0 +1,347 @@
+[
+    {
+        "username": "admin",
+        "password": "admin123",
+        "role": "admin",
+        "team": "Management"
+    },
+    {
+        "username": "vijaykumar",
+        "password": "1234",
+        "role": "user",
+        "team": "HLOS",
+        "employee_id": "12211",
+        "desk_number": "W-303(A)",
+        "asset_number": "EX013233",
+        "skillset": "Python, AI",
+        "certification": "AWS",
+        "resume": "Sairam Udgula.pdf",
+        "employee_photo": "vijaykumar_image (2).png",
+        "experience": null
+    },
+    {
+        "username": "lavakumar",
+        "password": "1234",
+        "role": "user",
+        "team": "QA",
+        "employee_id": "123122",
+        "desk_number": "W233",
+        "asset_number": "Ex143546",
+        "skillset": "MONGODB",
+        "certification": "UIUX",
+        "employee_photo": "lavakumar_image (2).png",
+        "resume": "lavakumar_Harsh_Sanga_Resume-5.pdf"
+    },
+    {
+        "username": "sanket",
+        "password": "1234",
+        "team": "NHOLS"
+    },
+    {
+        "username": "Yogesh",
+        "password": "1234",
+        "team": "NHOLS"
+    },
+    {
+        "username": "Rajendra",
+        "password": "1234",
+        "team": "QA"
+    },
+    {
+        "username": "rajesh",
+        "password": "1234",
+        "team": "QA"
+    },
+    {
+        "username": "Akansha",
+        "password": "1234",
+        "team": "HLOS"
+    },
+    {
+        "username": "lavaa",
+        "password": "1234",
+        "team": "QA"
+    },
+    {
+        "username": "lavakumari",
+        "password": "1234",
+        "team": "HLOS"
+    },
+    {
+        "username": "lavuuuu",
+        "password": "1234",
+        "team": "NHOLS"
+    },
+    {
+        "username": "kava",
+        "password": "1234",
+        "team": "HLOS"
+    },
+    {
+        "username": "dell",
+        "password": "Dell@2002",
+        "team": "HLOS",
+        "employee_id": "",
+        "desk_number": "",
+        "asset_number": "",
+        "skillset": "",
+        "certification": "",
+        "employee_photo": "",
+        "resume": ""
+    },
+    {
+        "username": "akkutara",
+        "password": "Splits@2026",
+        "team": "NHOLS",
+        "employee_id": "11333",
+        "desk_number": "W244",
+        "asset_number": "EX013243",
+        "skillset": "Python,C,C++,HTML,CSS,JS,DB,JAVA,Embedded c,Git,Jenkins,Power BI,Spring boot,Node js.",
+        "certification": "AI",
+        "employee_photo": "akkutara_download.jpg",
+        "resume": "akkutara_Sairam Udgula.pdf"
+    },
+    {
+        "username": "Innominds",
+        "password": "Innominds@12",
+        "team": "NHOLS",
+        "employee_id": "124353",
+        "desk_number": "W353",
+        "asset_number": "EX536565",
+        "skillset": "Pyhton, JAVA",
+        "certification": "Ai Certifications",
+        "employee_photo": "Innominds_image (2).png",
+        "resume": "Innominds_Sairam Udgula.pdf"
+    },
+    {
+        "username": "Karan",
+        "password": "Tejaswini@12",
+        "team": "NHOLS",
+        "employee_id": "12133",
+        "desk_number": "W-103(A)",
+        "asset_number": "EX0423121",
+        "skillset": "c java python c++ database",
+        "experience": "1",
+        "certification": "Power BI",
+        "employee_photo": "Karan_download.jpg",
+        "resume": "Karan_akkutara_Sairam Udgula (1).pdf",
+        "certificate_files": [
+            {
+                "file": "Karan_Harsh_Sanga_Prompt_Certificate.pdf",
+                "status": "Approved"
+            }
+        ],
+        "pc_ptag": "",
+        "monitor_ptag": "EX7654328",
+        "pc_working": "W",
+        "monitor_working": "W",
+        "desk_availability": "A"
+    },
+    {
+        "username": "vinni",
+        "password": "Vinni@12345",
+        "team": "NHOLS",
+        "employee_id": "11133",
+        "desk_number": "W-303(A)",
+        "asset_number": "EX013243",
+        "skillset": "AI",
+        "experience": "1",
+        "certification": "Power BI",
+        "employee_photo": "vinni_download.jpg",
+        "resume": "vinni_akkutara_Sairam Udgula (1).pdf"
+    },
+    {
+        "username": "nawabs",
+        "password": "Nawabs@12345",
+        "team": "HLOS",
+        "employee_id": "21121",
+        "desk_number": "W2131231",
+        "asset_number": "EX013243",
+        "skillset": "AI",
+        "experience": "1",
+        "certification": "Power BI",
+        "employee_photo": "nawabs_image (2).png",
+        "resume": "nawabs_akkutara_Sairam Udgula (1).pdf"
+    },
+    {
+        "username": "sufi",
+        "password": "Sufi@1234",
+        "team": "HLOS",
+        "employee_id": "11111",
+        "desk_number": "W1111111",
+        "asset_number": "EX1111111",
+        "skillset": "AI",
+        "experience": "1",
+        "certification": "Power BI",
+        "employee_photo": "sufi_download.jpg",
+        "resume": "sufi_akkutara_Sairam Udgula (1).pdf",
+        "certificate_files": [
+            "sufi_Innominds_Sairam Udgula.pdf",
+            "sufi_Harsh_Sanga_Prompt_Certificate.pdf",
+            "sufi_Document (2).pdf"
+        ]
+    },
+    {
+        "username": "shreya",
+        "password": "Shreya@1234",
+        "team": "HLOS",
+        "employee_id": "22222",
+        "desk_number": "12121212",
+        "asset_number": "EX1212121",
+        "skillset": "AI",
+        "experience": "3",
+        "certification": "Power BI",
+        "employee_photo": "shreya_image (2).png",
+        "resume": "shreya_akkutara_Sairam Udgula (1).pdf"
+    },
+    {
+        "username": "rahul",
+        "password": "Rahul@123456",
+        "team": "HLOS",
+        "employee_id": "",
+        "desk_number": "",
+        "asset_number": "",
+        "skillset": "",
+        "experience": "",
+        "certification": "",
+        "employee_photo": "",
+        "resume": "",
+        "certificate_files": []
+    },
+    {
+        "username": "waverock",
+        "password": "Waverock@123",
+        "team": "HLOS",
+        "employee_id": "55445",
+        "desk_number": "34344343",
+        "asset_number": "EX4432222",
+        "skillset": "AI,,,,,Java,,,,,uegfiu,,,,,,",
+        "experience": "4",
+        "certification": "Python",
+        "employee_photo": "waverock_image (2).png",
+        "resume": "waverock_sufi_akkutara_Sairam Udgula (1).pdf",
+        "certificate_files": [
+            "waverock_Harsh_Sanga_Resume-5.pdf"
+        ]
+    },
+    {
+        "username": "ferrari",
+        "password": "Ferrari@123",
+        "team": "QA",
+        "employee_id": "",
+        "desk_number": "",
+        "asset_number": "",
+        "skillset": "",
+        "experience": "",
+        "certification": "",
+        "employee_photo": "",
+        "resume": "",
+        "certificate_files": []
+    },
+    {
+        "username": "myntra",
+        "password": "Myntra@123",
+        "team": "QA",
+        "employee_id": "",
+        "desk_number": "",
+        "asset_number": "",
+        "skillset": "",
+        "experience": "",
+        "certification": "",
+        "employee_photo": "",
+        "resume": "",
+        "certificate_files": []
+    },
+    {
+        "username": "nakamura",
+        "password": "Nakamura@12",
+        "team": "NHOLS",
+        "employee_id": "12231",
+        "desk_number": "W-213414",
+        "asset_number": "EX3243243",
+        "skillset": "Python",
+        "experience": "1",
+        "certification": "Power BI",
+        "employee_photo": "nakamura_image.png",
+        "resume": "nakamura_Innominds_Sairam Udgula.pdf",
+        "certificate_files": [
+            {
+                "file": "nakamura_Harsh_Sanga_Res-AI_Certificate.pdf",
+                "status": "Approved"
+            },
+            {
+                "file": "nakamura_Harsh_Sanga_Prompt_Certificate.pdf",
+                "status": "Rejected"
+            }
+        ]
+    },
+    {
+        "username": "Bisleri",
+        "password": "Bisleri@123",
+        "team": "HLOS",
+        "employee_id": "98709",
+        "desk_number": "W-354(A)",
+        "pc_ptag": "EX6743674",
+        "monitor_ptag": "EX8587575",
+        "skillset": "Java",
+        "experience": "4",
+        "certification": "AI Python",
+        "employee_photo": "Bisleri_download.jpg",
+        "resume": "Bisleri_filtered_devices.pdf",
+        "certificate_files": [
+            {
+                "file": "Bisleri_Harsh_Sanga_Gen-AI_Certificate.pdf",
+                "status": "Approved"
+            }
+        ],
+        "pc_working": "W",
+        "monitor_working": "W",
+        "desk_availability": "A"
+    },
+    {
+        "username": "Chicken",
+        "password": "Chicken@65",
+        "team": "HLOS",
+        "employee_id": "87878",
+        "desk_number": "W2123324",
+        "pc_ptag": "EX5393546",
+        "monitor_ptag": "EX8346734",
+        "skillset": "AI Java Python",
+        "experience": "2",
+        "certification": "AI",
+        "employee_photo": "Chicken_image.png",
+        "resume": "Chicken_akkutara_Sairam Udgula (1).pdf",
+        "pc_working": "W",
+        "monitor_working": "W",
+        "desk_availability": "A",
+        "certificate_files": [
+            {
+                "file": "Chicken_Harsh_Sanga_Res-AI_Certificate.pdf",
+                "status": "Pending"
+            }
+        ]
+    },
+    {
+        "username": "Mutton",
+        "password": "Mutton@123",
+        "team": "NHOLS",
+        "employee_id": "78458",
+        "desk_number": "W-303(Y)",
+        "pc_ptag": "EX435t435",
+        "monitor_ptag": "EX3254235",
+        "skillset": "AI python",
+        "experience": "2",
+        "certification": "Power BI",
+        "employee_photo": "Mutton_image (1).png",
+        "resume": "Mutton_akkutara_Sairam Udgula (1).pdf",
+        "pc_working": "W",
+        "monitor_working": "W",
+        "desk_availability": "A",
+        "certificate_files": [
+            {
+                "file": "Mutton_Harsh_Sanga_Prompt_Certificate.pdf",
+                "status": "Pending"
+            }
+        ]
+    }
+]

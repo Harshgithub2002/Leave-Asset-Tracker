@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Signup | Leave & Asset Tracker</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+
+height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+overflow:hidden;
+
+background:linear-gradient(
+135deg,
+#071a38,
+#0f4c81,
+#1d7ed6,
+#3b82f6
+);
+
+background-size:400% 400%;
+
+animation:bgMove 12s ease infinite;
+
+}
+
+@keyframes bgMove{
+
+0%{background-position:0% 50%;}
+
+50%{background-position:100% 50%;}
+
+100%{background-position:0% 50%;}
+
+}
+
+body::before{
+
+content:"";
+
+position:absolute;
+
+width:700px;
+
+height:700px;
+
+background:rgba(255,255,255,.06);
+
+border-radius:50%;
+
+top:-250px;
+
+right:-250px;
+
+filter:blur(10px);
+
+}
+
+body::after{
+
+content:"";
+
+position:absolute;
+
+width:500px;
+
+height:500px;
+
+background:rgba(255,255,255,.05);
+
+border-radius:50%;
+
+left:-180px;
+
+bottom:-180px;
+
+filter:blur(10px);
+
+}
+
+.signup-card{
+
+width:430px;
+
+padding:30px 40px;
+
+max-height:90vh;
+
+overflow-y:auto;
+
+background:rgba(255,255,255,.10);
+
+backdrop-filter:blur(18px);
+
+border-radius:22px;
+
+border:1px solid rgba(255,255,255,.20);
+
+box-shadow:
+
+0 20px 50px rgba(0,0,0,.35),
+
+0 0 30px rgba(59,130,246,.25);
+
+animation:cardLoad .7s ease;
+
+}
+
+@keyframes cardLoad{
+
+from{
+
+opacity:0;
+
+transform:translateY(40px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+.logo{
+
+width:130px;
+
+margin:auto;
+
+display:block;
+
+margin-bottom:12px;
+
+}
+
+.title{
+
+text-align:center;
+
+font-size:28px;
+
+font-weight:600;
+
+color:white;
+
+margin-bottom:6px;
+
+}
+
+.subtitle{
+
+text-align:center;
+
+font-size:14px;
+
+color:#dbeafe;
+
+margin-bottom:20px;
+
+}
+
+form{
+
+display:flex;
+
+flex-direction:column;
+
+gap:14px;
+
+}
+
+.input-group{
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+.input-group label{
+
+font-size:13px;
+
+color:white;
+
+margin-bottom:6px;
+
+font-weight:500;
+
+}
+
+.input-group input,
+
+.input-group select{
+
+padding:13px 15px;
+
+border:none;
+
+border-radius:12px;
+
+background:rgba(255,255,255,.13);
+
+color:white;
+
+font-size:14px;
+
+transition:.30s;
+
+}
+
+.input-group input::placeholder{
+
+color:#d1d5db;
+
+}
+
+.input-group input:focus,
+
+.input-group select:focus{
+
+outline:none;
+
+background:rgba(255,255,255,.20);
+
+box-shadow:0 0 15px rgba(96,165,250,.6);
+
+}
+
+.password-hint{
+
+font-size:11px;
+
+line-height:18px;
+
+color:#dbeafe;
+
+margin-top:-8px;
+
+}
+
+button{
+
+margin-top:10px;
+
+padding:14px;
+
+border:none;
+
+border-radius:12px;
+
+font-size:16px;
+
+font-weight:600;
+
+cursor:pointer;
+
+background:linear-gradient(90deg,#2563eb,#60a5fa);
+
+color:white;
+
+transition:.30s;
+
+}
+
+button:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 8px 20px rgba(37,99,235,.45);
+
+}
+
+.login-text{
+
+margin-top:25px;
+
+text-align:center;
+
+font-size:14px;
+
+color:white;
+
+}
+
+.login-text a{
+
+text-decoration:none;
+
+color:#bfdbfe;
+
+font-weight:600;
+
+}
+
+.login-text a:hover{
+
+color:white;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="signup-card">
+
+<img
+src="{{ url_for('static', filename='images/logo.png') }}"
+class="logo">
+
+<h2 class="title">
+Create Account
+</h2>
+
+<p class="subtitle">
+Leave & Asset Tracker Portal
+</p>
+<form method="POST">
+
+<div class="input-group">
+
+<label>Username</label>
+
+<input
+type="text"
+name="username"
+placeholder="Enter Username"
+required>
+
+</div>
+
+<div class="input-group">
+
+<label>Password</label>
+
+<input
+type="password"
+name="password"
+placeholder="Enter Password"
+required
+minlength="8"
+maxlength="12"
+pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,12}$"
+title="Password must contain uppercase, lowercase and special character">
+
+<div class="password-hint">
+
+✓ 8–12 Characters<br>
+✓ 1 Uppercase Letter<br>
+✓ 1 Lowercase Letter<br>
+✓ 1 Special Character
+
+</div>
+
+</div>
+
+<div class="input-group">
+
+<label>Team</label>
+
+<select name="team" required>
+
+<option value="">Select Team</option>
+
+<option value="HLOS">HLOS</option>
+
+<option value="NHLOS">NHLOS</option>
+
+<option value="QA">QA</option>
+
+</select>
+
+</div>
+
+<button type="submit">
+
+Create Account
+
+</button>
+
+</form>
+
+<div class="login-text">
+
+Already have an account?
+
+<a href="{{ url_for('login') }}">
+
+Login
+
+</a>
+
+</div>
+
+{% with messages = get_flashed_messages() %}
+
+{% if messages %}
+
+<div
+id="popup"
+class="popup">
+
+{{ messages[0] }}
+
+</div>
+
+<style>
+
+.popup{
+
+position:fixed;
+
+top:30px;
+
+right:30px;
+
+padding:14px 24px;
+
+border-radius:12px;
+
+background:#16a34a;
+
+color:white;
+
+font-size:14px;
+
+font-weight:500;
+
+box-shadow:0 8px 20px rgba(0,0,0,.3);
+
+animation:popupIn .4s ease;
+
+z-index:999;
+
+}
+
+@keyframes popupIn{
+
+from{
+
+opacity:0;
+
+transform:translateX(80px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateX(0);
+
+}
+
+}
+
+</style>
+
+<script>
+
+setTimeout(function(){
+
+let p=document.getElementById("popup");
+
+if(p){
+
+p.style.opacity="0";
+
+p.style.transform="translateX(60px)";
+
+}
+
+},3000);
+
+</script>
+
+{% endif %}
+
+{% endwith %}
+
+</div>
+
+</body>
+
+</html>

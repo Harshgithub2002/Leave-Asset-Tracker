@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Users</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+<style>
+body{
+margin:0;
+font-family:Poppins;
+background: radial-gradient(circle at top,#1f2937,#000);
+color:white;
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:220px;
+height:100vh;
+background:rgba(255,255,255,0.05);
+backdrop-filter: blur(10px);
+padding:20px;
+position:fixed;
+}
+
+.sidebar a{
+display:block;
+padding:10px;
+margin-bottom:10px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+}
+
+.sidebar a:hover{
+background:#2563eb;
+}
+
+/* MAIN */
+.main{
+margin-left:220px;
+width:calc(100% - 220px);
+padding:30px;
+}
+
+/* CARD */
+.card{
+background:rgba(255,255,255,0.05);
+padding:25px;
+border-radius:15px;
+}
+
+/* TABLE */
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+th,td{
+padding:12px;
+border:1px solid #444;
+text-align:center;
+}
+
+th{
+background:#2563eb;
+}
+/* USER HOVER DETAILS */
+
+.user-cell{
+
+position:relative;
+
+cursor:pointer;
+
+font-weight:bold;
+
+}
+
+.user-popup{
+
+display:none;
+
+position:absolute;
+
+/* Show popup to the LEFT of username */
+right:-15%;
+
+top:50%;
+
+transform:translateY(-50%);
+
+background:#111827;
+
+border:2px solid #2563eb;
+
+border-radius:10px;
+
+padding:12px;
+
+width:220px;
+
+text-align:left;
+
+box-shadow:0 0 15px rgba(0,0,0,.5);
+
+z-index:9999;
+
+}
+
+.user-popup p{
+
+margin:8px 0;
+
+font-size:14px;
+
+color:white;
+
+}
+
+.user-cell:hover .user-popup{
+
+display:block;
+
+}
+/* ===========================
+   EDIT USER POPUP
+=========================== */
+
+.modal{
+
+display:none;
+
+position:fixed;
+
+left:0;
+
+top:0;
+
+width:100%;
+
+height:100%;
+
+background:rgba(0,0,0,.7);
+
+z-index:99999;
+
+}
+
+.modal-content{
+
+background:#111827;
+
+width:520px;
+
+margin:40px auto;
+
+padding:25px;
+
+border-radius:12px;
+
+border:2px solid #2563eb;
+
+}
+
+.modal-content h2{
+
+margin-top:0;
+
+text-align:center;
+
+}
+
+.modal-content input,
+.modal-content select{
+
+width:100%;
+
+padding:10px;
+
+margin:8px 0;
+
+border-radius:8px;
+
+border:none;
+
+background:#1e3a8a;
+
+color:white;
+
+box-sizing:border-box;
+
+}
+
+.modal-content button{
+
+margin-top:15px;
+
+padding:10px;
+
+width:100%;
+
+background:#2563eb;
+
+border:none;
+
+color:white;
+
+border-radius:8px;
+
+cursor:pointer;
+
+}
+
+.close{
+
+float:right;
+
+font-size:24px;
+
+cursor:pointer;
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+<h2>Admin Panel</h2>
+<a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+<a href="{{ url_for('admin_requests') }}">Requests</a>
+<a href="{{ url_for('admin_users') }}">Users</a>
+<a href="{{ url_for('admin_reports') }}">Reports</a>
+<a href="{{ url_for('logout') }}">Logout</a>
+</div>
+
+<div class="main">
+
+<div class="card">
+<h2>All Users</h2>
+
+<table>
+<tr>
+<th>Username</th>
+<th>Team</th>
+</tr>
+
+{% for user in users %}
+<tr>
+<td class="user-cell">
+
+<span
+style="cursor:pointer;color:#60a5fa;font-weight:bold;"
+onclick="openUserProfile(
+'{{ user.username }}',
+'{{ user.employee_id }}',
+'{{ user.desk_number }}',
+'{{ user.pc_ptag }}',
+'{{ user.monitor_ptag }}',
+'{{ user.pc_working }}',
+'{{ user.monitor_working }}',
+'{{ user.desk_availability }}'
+)">
+
+{{ user.username }}
+
+</span>
+
+<div class="user-popup">
+
+<p><b>Emp ID :</b> {{ user.employee_id }}</p>
+
+<p><b>PC PTag :</b> {{ user.pc_ptag }}</p>
+
+<p><b>Monitor PTag :</b> {{ user.monitor_ptag }}</p>
+
+</div>
+
+</td>
+<td>{{ user.team }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+<div id="editModal" class="modal">
+
+<div class="modal-content">
+
+<span class="close"
+onclick="closeModal()">
+&times;
+</span>
+
+<h2>User Profile</h2>
+
+<form
+action="{{ url_for('update_user_profile') }}"
+method="POST">
+
+<input
+type="hidden"
+name="username"
+id="edit_username">
+
+<label>Employee Name</label>
+
+<input
+type="text"
+id="edit_name"
+readonly>
+
+<label>Employee ID</label>
+
+<input
+type="text"
+id="edit_employee"
+readonly>
+
+<label>Desk Number</label>
+
+<input
+type="text"
+name="desk_number"
+id="edit_desk">
+
+<label>PC PTag</label>
+
+<input
+type="text"
+name="pc_ptag"
+id="edit_pc">
+
+<label>Monitor PTag</label>
+
+<input
+type="text"
+name="monitor_ptag"
+id="edit_monitor">
+
+<label>PC Working</label>
+
+<select
+name="pc_working"
+id="edit_pc_work">
+
+<option value="W">
+Working
+</option>
+
+<option value="NW">
+Not Working
+</option>
+
+</select>
+
+<label>Monitor Working</label>
+
+<select
+name="monitor_working"
+id="edit_monitor_work">
+
+<option value="W">
+Working
+</option>
+
+<option value="NW">
+Not Working
+</option>
+
+</select>
+
+<label>Desk Availability</label>
+
+<select
+name="desk_availability"
+id="edit_desk_status">
+
+<option value="A">
+Available
+</option>
+
+<option value="NA">
+Not Available
+</option>
+
+</select>
+
+<button>
+
+Save Changes
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+<script>
+
+function openUserProfile(
+username,
+employeeId,
+deskNumber,
+pcPtag,
+monitorPtag,
+pcWorking,
+monitorWorking,
+deskAvailability
+){
+
+document.getElementById("editModal").style.display="block";
+
+document.getElementById("edit_username").value=username;
+
+document.getElementById("edit_name").value=username;
+
+document.getElementById("edit_employee").value=employeeId;
+
+document.getElementById("edit_desk").value=deskNumber;
+
+document.getElementById("edit_pc").value=pcPtag;
+
+document.getElementById("edit_monitor").value=monitorPtag;
+
+document.getElementById("edit_pc_work").value=pcWorking || "W";
+
+document.getElementById("edit_monitor_work").value=monitorWorking || "W";
+
+document.getElementById("edit_desk_status").value=deskAvailability || "A";
+
+}
+
+function closeModal(){
+
+document.getElementById("editModal").style.display="none";
+
+}
+
+window.onclick=function(event){
+
+let modal=document.getElementById("editModal");
+
+if(event.target==modal){
+
+modal.style.display="none";
+
+}
+
+}
+
+</script>
+</body>
+</html>

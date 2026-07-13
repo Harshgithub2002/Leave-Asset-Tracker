@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin - Requests</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:Poppins;
+background: radial-gradient(circle at top,#1f2937,#000);
+color:white;
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:220px;
+height:100vh;
+background:rgba(255,255,255,0.05);
+backdrop-filter: blur(10px);
+padding:20px;
+position:fixed;
+}
+
+.sidebar h2{
+margin-bottom:30px;
+}
+
+.sidebar a{
+display:block;
+padding:10px;
+margin-bottom:10px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+transition:0.3s;
+}
+
+.sidebar a:hover{
+background:#2563eb;
+box-shadow:0 0 10px #2563eb;
+}
+
+/* MAIN */
+.main{
+margin-left:220px;
+width:calc(100% - 220px);
+padding:30px;
+}
+
+/* TOPBAR */
+.topbar{
+display:flex;
+justify-content:flex-end;
+margin-bottom:20px;
+}
+
+/* SEARCH */
+.search-bar{
+width:280px;
+padding:10px;
+border-radius:8px;
+border:none;
+background:#1e3a8a;
+color:white;
+}
+
+.search-bar:hover{
+background:#1e40af;
+}
+
+/* CARD */
+.card{
+background:rgba(255,255,255,0.05);
+padding:25px;
+border-radius:15px;
+backdrop-filter: blur(10px);
+transition:0.3s;
+}
+
+.card:hover{
+box-shadow:0 0 20px rgba(37,99,235,0.4);
+}
+
+/* TABLE */
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th,td{
+padding:10px;
+border:1px solid #444;
+text-align:center;
+}
+
+th{
+background:#2563eb;
+}
+
+tr:hover{
+background:rgba(255,255,255,0.05);
+}
+
+/* STATUS COLORS */
+.status-pending{
+color:#facc15;
+font-weight:600;
+}
+
+.status-accepted{
+color:#22c55e;
+font-weight:600;
+}
+
+.status-rejected{
+color:#ef4444;
+font-weight:600;
+}
+
+/* HIGHLIGHT LONG LEAVES/WFH */
+.highlight-row{
+background:rgba(255,0,0,0.18);
+}
+
+.highlight-row:hover{
+background:rgba(255,0,0,0.28);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+<h2>Admin Panel</h2>
+
+<a href="{{ url_for('admin_dashboard') }}">
+Dashboard
+</a>
+
+<a href="{{ url_for('admin_requests') }}">
+Requests
+</a>
+
+<a href="{{ url_for('admin_users') }}">
+Users
+</a>
+
+<a href="{{ url_for('admin_reports') }}">Reports</a>
+
+<a href="{{ url_for('logout') }}">
+Logout
+</a>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<div class="topbar">
+
+<input
+type="text"
+class="search-bar"
+placeholder="Search..."
+onkeyup="searchTable()"
+>
+
+</div>
+
+<div class="card">
+
+<h2>Leave / WFH Requests</h2>
+
+<div class="card" style="margin-bottom:20px;">
+
+<h3>Filter Requests</h3>
+
+<select id="reqFilterYear">
+<option value="">All Years</option>
+<option value="2026">2026</option>
+<option value="2027">2027</option>
+</select>
+
+<select id="reqFilterMonth">
+<option value="">All Months</option>
+<option value="01">January</option>
+<option value="02">February</option>
+<option value="03">March</option>
+<option value="04">April</option>
+<option value="05">May</option>
+<option value="06">June</option>
+<option value="07">July</option>
+<option value="08">August</option>
+<option value="09">September</option>
+<option value="10">October</option>
+<option value="11">November</option>
+<option value="12">December</option>
+</select>
+
+<select id="reqFilterDate">
+<option value="">All Dates</option>
+
+{% for i in range(1,32) %}
+<option value="{{ '%02d'|format(i) }}">
+{{ i }}
+</option>
+{% endfor %}
+
+</select>
+
+<select id="reqFilterPeriod">
+<option value="">All Periods</option>
+<option value="Q1">Quarter 1</option>
+<option value="Q2">Quarter 2</option>
+<option value="Q3">Quarter 3</option>
+<option value="Q4">Quarter 4</option>
+<option value="H1">Half Yearly 1</option>
+<option value="H2">Half Yearly 2</option>
+</select>
+
+<button
+type="button"
+onclick="filterRequests()"
+>
+Filter
+</button>
+
+<button
+type="button"
+onclick="resetRequestFilters()"
+style="background:#dc2626;"
+>
+Reset
+</button>
+
+</div>
+
+<table id="requestTable">
+
+<tr>
+
+<th>S.No</th>
+<th>User</th>
+<th>Team</th>
+<th>Request Type</th>
+<th>Leave Type</th>
+<th>Reason</th>
+<th>From Date</th>
+<th>To Date</th>
+<th>Total Days</th>
+<th>Status</th>
+<th>Action</th>
+
+</tr>
+
+{% for index, req in requests %}
+
+<tr class="
+{% if req.get('leave_days',0) >= 3 %}
+highlight-row
+{% endif %}
+">
+
+<td>{{ loop.index }}</td>
+
+<td>{{ req.username }}</td>
+
+<td>{{ req.team }}</td>
+
+<td>{{ req.request_type }}</td>
+
+<td>{{ req.leave_type }}</td>
+
+<td>{{ req.reason }}</td>
+
+<td>{{ req.from_date }}</td>
+
+<td>{{ req.to_date }}</td>
+
+<td>
+{{ req.get('leave_days',0) }}
+</td>
+
+<td class="
+{% if req.status == 'Pending' %}
+status-pending
+
+{% elif req.status == 'Accepted' %}
+status-accepted
+
+{% elif req.status == 'Rejected' %}
+status-rejected
+{% endif %}
+">
+
+{{ req.status }}
+
+</td>
+
+<td>
+
+<a href="{{ url_for('update_request', index=index, action='accept') }}"
+style="
+color:#22c55e;
+font-weight:600;
+text-decoration:none;
+
+{% if req.status != 'Pending' %}
+pointer-events:none;
+opacity:0.5;
+{% endif %}
+">
+Accept
+</a>
+
+|
+
+<a href="{{ url_for('update_request', index=index, action='reject') }}"
+style="
+color:#ef4444;
+font-weight:600;
+text-decoration:none;
+
+{% if req.status != 'Pending' %}
+pointer-events:none;
+opacity:0.5;
+{% endif %}
+">
+Reject
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+function filterRequests(){
+
+let year =
+document.getElementById("reqFilterYear").value;
+
+let month =
+document.getElementById("reqFilterMonth").value;
+
+let day =
+document.getElementById("reqFilterDate").value;
+
+let period =
+document.getElementById("reqFilterPeriod").value;
+
+let rows =
+document.querySelectorAll("#requestTable tr");
+
+rows.forEach((row,index)=>{
+
+if(index === 0){
+return;
+}
+
+let dateCell =
+row.cells[6].innerText.trim();
+
+let date =
+new Date(dateCell + "T00:00:00");
+
+if(isNaN(date)){
+return;
+}
+
+let rowYear =
+date.getFullYear().toString();
+
+let rowMonth =
+String(date.getMonth()+1).padStart(2,"0");
+
+let rowDay =
+String(date.getDate()).padStart(2,"0");
+
+let show = true;
+
+if(year && rowYear !== year){
+show = false;
+}
+
+if(month && rowMonth !== month){
+show = false;
+}
+
+if(day && rowDay !== day){
+show = false;
+}
+
+if(period){
+
+let m = date.getMonth()+1;
+
+if(period==="Q1" && !(m>=1 && m<=3))
+show=false;
+
+if(period==="Q2" && !(m>=4 && m<=6))
+show=false;
+
+if(period==="Q3" && !(m>=7 && m<=9))
+show=false;
+
+if(period==="Q4" && !(m>=10 && m<=12))
+show=false;
+
+if(period==="H1" && !(m>=1 && m<=6))
+show=false;
+
+if(period==="H2" && !(m>=7 && m<=12))
+show=false;
+}
+
+row.style.display = show ? "" : "none";
+
+});
+
+}
+
+function resetRequestFilters(){
+
+document.getElementById("reqFilterYear").value="";
+document.getElementById("reqFilterMonth").value="";
+document.getElementById("reqFilterDate").value="";
+document.getElementById("reqFilterPeriod").value="";
+
+document.querySelectorAll("#requestTable tr")
+.forEach((row,index)=>{
+
+row.style.display="";
+
+});
+
+}
+
+function searchTable(){
+
+let input =
+document
+.querySelector(".search-bar")
+.value
+.toLowerCase();
+
+let rows =
+document.querySelectorAll(
+"#requestTable tr"
+);
+
+for(let i=1;i<rows.length;i++){
+
+rows[i].style.display =
+rows[i].innerText
+.toLowerCase()
+.includes(input)
+? ""
+: "none";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
