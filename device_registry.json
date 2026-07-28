@@ -1,0 +1,56 @@
+[
+    {
+        "username": "Bisleri",
+        "sp_name": "IM660",
+        "ptag": "ASB12345",
+        "location": "ODC",
+        "issue_date": "2026-07-28",
+        "return_date": "2026-07-29",
+        "status": "Returned"
+    },
+    {
+        "username": "Bisleri",
+        "sp_name": "IM845",
+        "ptag": "ASB98765",
+        "location": "QC",
+        "issue_date": "2026-07-28",
+        "return_date": "2026-07-29",
+        "status": "Returned"
+    },
+    {
+        "username": "Bisleri",
+        "sp_name": "IM8098",
+        "ptag": "ASB23456",
+        "location": "QC",
+        "issue_date": "2026-07-28",
+        "return_date": "2026-07-28",
+        "status": "Returned"
+    },
+    {
+        "username": "Mutton",
+        "sp_name": "IM670",
+        "ptag": "ASb654",
+        "location": "ODC",
+        "issue_date": "2026-07-28",
+        "return_date": "2026-07-28",
+        "status": "Returned"
+    },
+    {
+        "username": "Mutton",
+        "sp_name": "IM845",
+        "ptag": "ASB98765",
+        "location": "QC",
+        "issue_date": "2026-07-28",
+        "return_date": "",
+        "status": "In Use"
+    },
+    {
+        "username": "Bisleri",
+        "sp_name": "IM660",
+        "ptag": "ASB12345",
+        "location": "ODC",
+        "issue_date": "2026-07-28",
+        "return_date": "2026-07-26",
+        "status": "Returned"
+    }
+]

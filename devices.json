@@ -1,0 +1,81 @@
+[
+    {
+        "sp_name": "IM845",
+        "ptag": "ASB98765",
+        "condition": "Not Working",
+        "location": "QC",
+        "added_by": "Mutton"
+    },
+    {
+        "sp_name": "IM8098",
+        "ptag": "ASB23456",
+        "condition": "Working",
+        "location": "QC",
+        "comments": "\r\nDevice wifi is not working\r\n\r\n",
+        "added_by": "Mutton"
+    },
+    {
+        "sp_name": "IM670",
+        "ptag": "ASb654",
+        "condition": "Working",
+        "location": "ODC",
+        "comments": "\r\n",
+        "added_by": "Mutton"
+    },
+    {
+        "sp_name": "IM660",
+        "ptag": "ASB12345",
+        "condition": "Working",
+        "location": "ODC",
+        "comments": "\r\n",
+        "added_by": "Mutton"
+    },
+    {
+        "sp_name": "IM660",
+        "ptag": "ASB8934",
+        "condition": "Not Working",
+        "location": "ODC",
+        "comments": "",
+        "added_by": "Mutton"
+    },
+    {
+        "sp_name": "IM660",
+        "ptag": "ASB8934",
+        "condition": "Not Working",
+        "location": "ODC",
+        "comments": "",
+        "added_by": "Mutton"
+    },
+    {
+        "sp_name": "IM2290",
+        "ptag": "ASB54666",
+        "condition": "Working",
+        "location": "ODC",
+        "comments": "",
+        "added_by": "Mutton"
+    },
+    {
+        "sp_name": "IM660",
+        "ptag": "ASB12343",
+        "condition": "Not Working",
+        "location": "ODC",
+        "comments": "Camera is not working",
+        "added_by": "Mutton"
+    },
+    {
+        "sp_name": "IM2290",
+        "ptag": "EX21312",
+        "condition": "Working",
+        "location": "ODC",
+        "comments": "",
+        "added_by": "Mutton"
+    },
+    {
+        "sp_name": "IM8250",
+        "ptag": "ASB654545",
+        "condition": "Not Working",
+        "location": "QC",
+        "comments": "",
+        "added_by": "Mutton"
+    }
+]

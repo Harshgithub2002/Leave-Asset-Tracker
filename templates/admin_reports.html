@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Admin Reports</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
+}
+
+body{
+
+    background:radial-gradient(circle at top,#1f2937,#000);
+    color:white;
+    display:flex;
+
+}
+
+/* ===========================
+        SIDEBAR
+=========================== */
+
+.sidebar{
+
+    width:220px;
+    height:100vh;
+    position:fixed;
+
+    background:rgba(255,255,255,0.05);
+
+    backdrop-filter:blur(12px);
+
+    padding:20px;
+
+}
+
+.sidebar h2{
+
+    margin-bottom:30px;
+
+}
+
+.sidebar a{
+
+    display:block;
+
+    color:white;
+
+    text-decoration:none;
+
+    padding:12px;
+
+    margin-bottom:12px;
+
+    border-radius:10px;
+
+    transition:.3s;
+
+}
+
+.sidebar a:hover{
+
+    background:#2563eb;
+
+    box-shadow:0 0 12px #2563eb;
+
+}
+
+/* Active page */
+
+.active-menu{
+
+    background:#2563eb;
+
+    box-shadow:0 0 12px #2563eb;
+
+}
+
+/* ===========================
+          MAIN
+=========================== */
+
+.main{
+
+    margin-left:240px;
+
+    width:calc(100% - 240px);
+
+    padding:30px;
+
+}
+
+/* ===========================
+         HEADER
+=========================== */
+
+.page-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+}
+
+.page-title{
+
+    font-size:34px;
+
+    font-weight:bold;
+
+    color:#60a5fa;
+
+}
+
+.page-subtitle{
+
+    margin-top:8px;
+
+    color:#cbd5e1;
+
+}
+
+/* ===========================
+          CARD
+=========================== */
+
+.card{
+
+    background:rgba(255,255,255,0.05);
+
+    backdrop-filter:blur(12px);
+
+    border-radius:18px;
+
+    padding:30px;
+
+    box-shadow:0 0 20px rgba(0,0,0,.25);
+
+}
+/* ===========================
+        FILTERS
+=========================== */
+
+.filter-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+
+    margin-top:10px;
+
+}
+
+.filter-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.filter-group label{
+
+    font-size:15px;
+
+    margin-bottom:8px;
+
+    color:#cbd5e1;
+
+    font-weight:600;
+
+}
+
+.filter-group select{
+
+    height:48px;
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:10px;
+
+    background:#111827;
+
+    color:white;
+
+    font-size:15px;
+
+    outline:none;
+
+}
+
+.filter-group select:focus{
+
+    box-shadow:0 0 10px #2563eb;
+
+}
+
+/* ===========================
+        TEAM BUTTONS
+=========================== */
+
+.team-buttons{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:25px;
+
+    margin-top:35px;
+
+}
+
+.team-buttons button{
+
+    width:200px;
+
+    height:55px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.team-buttons button:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 0 15px #2563eb;
+
+}
+
+/* ===========================
+        REPORT TABLE
+=========================== */
+
+.report-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:35px;
+
+    overflow:hidden;
+
+    border-radius:12px;
+
+}
+
+.report-table thead{
+
+    background:#2563eb;
+
+}
+
+.report-table th{
+
+    padding:16px;
+
+    font-size:16px;
+
+    color:white;
+
+    text-align:center;
+
+}
+
+.report-table td{
+
+    padding:15px;
+
+    text-align:center;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+    background:rgba(255,255,255,.03);
+
+}
+
+.report-table tbody tr:hover{
+
+    background:rgba(37,99,235,.18);
+
+}
+
+.download-report-btn{
+
+    padding:8px 16px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#16a34a;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    transition:.3s;
+
+}
+
+.download-report-btn:hover{
+
+    background:#15803d;
+
+}
+
+.no-data{
+
+    text-align:center;
+
+    margin-top:40px;
+
+    font-size:20px;
+
+    color:#94a3b8;
+
+}
+
+/* ===========================
+
+      REPORT SUMMARY
+
+=========================== */
+
+.summary-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+
+    margin:35px 0;
+
+}
+
+.summary-card{
+
+    background:rgba(255,255,255,.05);
+
+    border-left:5px solid #2563eb;
+
+    border-radius:14px;
+
+    padding:25px;
+
+    transition:.3s;
+
+}
+
+.summary-card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 0 18px rgba(37,99,235,.4);
+
+}
+
+.summary-title{
+
+    color:#cbd5e1;
+
+    font-size:15px;
+
+}
+
+.summary-value{
+
+    margin-top:12px;
+
+    font-size:34px;
+
+    font-weight:bold;
+
+}
+
+/* SEARCH */
+
+.search-box{
+
+    width:320px;
+
+    height:45px;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#111827;
+
+    color:white;
+
+    margin-bottom:25px;
+
+    outline:none;
+
+}
+
+.search-box:focus{
+
+    box-shadow:0 0 10px #2563eb;
+
+}
+
+/* REPORT TYPE COLORS */
+
+.type-monthly{
+
+    color:#22c55e;
+
+    font-weight:bold;
+
+}
+
+.type-weekly{
+
+    color:#facc15;
+
+    font-weight:bold;
+
+}
+
+.type-daily{
+
+    color:#60a5fa;
+
+    font-weight:bold;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ===========================
+          SIDEBAR
+=========================== -->
+
+<div class="sidebar">
+
+    <h2>Admin Panel</h2>
+
+    <a href="{{ url_for('admin_dashboard') }}">
+        Dashboard
+</a>
+
+    <a href="{{ url_for('admin_requests') }}">
+        Requests
+</a>
+
+    <a href="{{ url_for('admin_users') }}">
+        Users
+</a>
+
+    <a href="{{ url_for('admin_reports') }}"
+       class="active-menu">
+        Reports
+</a>
+
+    <a href="{{ url_for('logout') }}">
+        Logout
+</a>
+
+</div>
+
+<!-- ===========================
+           MAIN
+=========================== -->
+
+<div class="main">
+
+    <div class="page-header">
+
+        <div>
+
+            <div class="page-title">
+                Reports Dashboard
+</div>
+
+            <div class="page-subtitle">
+                View and download Daily, Weekly and Monthly reports
+</div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2 style="margin-bottom:25px;color:#60a5fa;">
+
+    Report Filters
+</h2>
+
+<div class="filter-grid">
+
+    <div class="filter-group">
+
+        <label>Year</label>
+
+        <select id="reportYear">
+    <option value="">Select Year</option>
+</select>
+
+    </div>
+
+    <div class="filter-group">
+
+        <label>Month</label>
+
+        <select id="reportMonth">
+    <option value="">Select Month</option>
+</select>
+
+    </div>
+
+    <div class="filter-group">
+
+        <label>Week</label>
+
+        <select id="reportWeek">
+    <option value="">Select Week</option>
+</select>
+
+    </div>
+
+    <div class="filter-group">
+
+        <label>Date</label>
+
+        <select id="reportDate">
+    <option value="">Select Date</option>
+</select>
+
+    </div>
+
+</div>
+
+
+<div class="team-buttons">
+
+    <button onclick="loadReports('HLOS')">
+
+        HLOS
+
+    </button>
+
+    <button onclick="loadReports('NHOLS')">
+
+        NHOLS
+
+    </button>
+
+    <button onclick="loadReports('QA')">
+
+        QA
+
+    </button>
+
+</div>
+
+
+<div id="reportResult" style="margin-top:40px;">
+
+<table class="report-table">
+
+<thead>
+
+<tr>
+
+<th>Employee</th>
+
+<th>Team</th>
+
+<th>Report Type</th>
+
+<th>Year</th>
+
+<th>Month</th>
+
+<th>Week</th>
+
+<th>Date</th>
+
+<th>File Name</th>
+
+<th>Download</th>
+
+</tr>
+
+</thead>
+
+<tbody id="reportTableBody">
+
+<tr>
+
+<td colspan="9" class="no-data">
+
+Select HLOS / NHOLS / QA
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+
+    </div>
+
+</div>
+
+<script>
+
+const reports = {{ reports | tojson }};
+
+const users = {{ users | tojson }};
+
+console.log("Reports :", reports);
+console.log("Users :", users);
+console.log(reports);
+
+function loadReports(team){
+
+    window.selectedTeam = team;
+
+    let year = document.getElementById("reportYear").value;
+    let month = document.getElementById("reportMonth").value;
+    let week = document.getElementById("reportWeek").value;
+    let date = document.getElementById("reportDate").value;
+
+    let table = document.getElementById("reportTableBody");
+    table.innerHTML = "";
+
+    // Users of selected team
+    let teamUsers = users.filter(user => user.team === team);
+
+    let usernames = teamUsers.map(user => user.username);
+
+    console.log("Selected Team:", team);
+    console.log("Team Users:", usernames);
+
+    // Filter reports
+    let filtered = reports.filter(report => {
+
+    console.log(
+        "Checking:",
+        report.username,
+        "Team Match:",
+        usernames.includes(report.username)
+    );
+
+    if(!usernames.includes(report.username))
+        return false;
+
+    if(year && report.year != year)
+        return false;
+
+    if(month && report.month != month)
+        return false;
+
+    if(week && report.week != week)
+        return false;
+
+    if(date && report.date != date)
+        return false;
+
+    return true;
+});
+<!--    // Dashboard counts-->
+<!--    document.getElementById("totalReports").innerText =-->
+<!--        filtered.length;-->
+
+<!--    document.getElementById("monthlyReports").innerText =-->
+<!--        filtered.filter(r => r.type == "Monthly").length;-->
+
+<!--    document.getElementById("weeklyReports").innerText =-->
+<!--        filtered.filter(r => r.type == "Weekly").length;-->
+
+<!--    document.getElementById("dailyReports").innerText =-->
+<!--        filtered.filter(r => r.type == "Daily").length;-->
+
+    if(filtered.length == 0){
+
+        table.innerHTML = `
+        <tr>
+            <td colspan="9" class="no-data">
+                No Reports Found
+            </td>
+        </tr>`;
+
+        return;
+    }
+
+    filtered.forEach(report => {
+
+        let row = document.createElement("tr");
+
+        row.innerHTML = `
+
+        <td>${report.username}</td>
+
+        <td>${team}</td>
+
+        <td>
+            <span class="type-${report.type.toLowerCase()}">
+                ${report.type}
+            </span>
+        </td>
+
+        <td>${report.year}</td>
+
+        <td>${report.month}</td>
+
+        <td>${report.week || "-"}</td>
+
+        <td>${report.date || "-"}</td>
+
+        <td>${report.original_name}</td>
+
+        <td>
+            <a href="/static/uploads/reports/${report.file}" download>
+                <button class="download-report-btn">
+                    Download
+                </button>
+            </a>
+        </td>
+        `;
+
+        table.appendChild(row);
+
+    });
+
+}
+// Summary Cards
+
+const reportYear=document.getElementById("reportYear");
+const reportMonth=document.getElementById("reportMonth");
+const reportWeek=document.getElementById("reportWeek");
+const reportDate=document.getElementById("reportDate");
+
+
+
+
+// ----------------------------
+// UNIQUE YEARS
+// ----------------------------
+
+function loadYears(){
+
+    reportYear.innerHTML =
+    "<option value=''>Select Year</option>";
+
+    let years = [];
+
+    reports.forEach(function(r){
+
+        if(r.year && !years.includes(r.year)){
+
+            years.push(r.year);
+
+        }
+
+    });
+
+    years.sort(function(a,b){
+
+        return b-a;
+
+    });
+
+    years.forEach(function(year){
+
+        let option =
+        document.createElement("option");
+
+        option.value = year;
+
+        option.text = year;
+
+        reportYear.appendChild(option);
+
+    });
+
+}
+console.log("Years Loaded");
+console.log(reportYear.innerHTML);
+
+// ----------------------------
+// MONTHS
+// ----------------------------
+
+reportYear.addEventListener("change",function(){
+
+    reportMonth.innerHTML="<option value=''>Select Month</option>";
+    reportWeek.innerHTML="<option value=''>Select Week</option>";
+    reportDate.innerHTML="<option value=''>Select Date</option>";
+
+    if(this.value==="")
+        return;
+
+    let months=[...new Set(
+
+        reports
+        .filter(r=>r.year==this.value)
+        .map(r=>Number(r.month))
+
+    )];
+
+    months.sort((a,b)=>a-b);
+
+    months.forEach(month=>{
+
+        let option=document.createElement("option");
+
+        option.value=month;
+
+        option.text=new Date(
+            2026,
+            month-1
+        ).toLocaleString("default",{month:"long"});
+
+        reportMonth.appendChild(option);
+
+    });
+
+});
+
+// ----------------------------
+// WEEKS
+// ----------------------------
+
+reportMonth.addEventListener("change",function(){
+
+    reportWeek.innerHTML="<option value=''>Select Week</option>";
+    reportDate.innerHTML="<option value=''>Select Date</option>";
+
+    if(this.value==="")
+        return;
+
+    let weeks=[...new Set(
+
+        reports
+        .filter(r=>
+
+            r.year==reportYear.value &&
+
+            r.month==this.value &&
+
+            r.week!=""
+
+        )
+        .map(r=>Number(r.week))
+
+    )];
+
+    weeks.sort((a,b)=>a-b);
+
+    weeks.forEach(week=>{
+
+        let option=document.createElement("option");
+
+        option.value=week;
+
+        option.text="Week "+week;
+
+        reportWeek.appendChild(option);
+
+    });
+
+});
+
+// ----------------------------
+// DATES
+// ----------------------------
+
+reportWeek.addEventListener("change", function () {
+
+    reportDate.innerHTML =
+        "<option value=''>Select Date</option>";
+
+    if(this.value==="")
+        return;
+
+    let dates = [...new Set(
+
+        reports
+        .filter(r =>
+
+            r.year == reportYear.value &&
+            r.month == reportMonth.value &&
+            r.week == this.value &&
+            r.date
+
+        )
+        .map(r => r.date)
+
+    )];
+
+    dates.sort();
+
+    dates.forEach(fullDate => {
+
+        let option =
+            document.createElement("option");
+
+        option.value = fullDate;
+
+        option.text = fullDate;
+
+        reportDate.appendChild(option);
+
+    });
+
+});
+
+loadYears();
+
+[
+reportYear,
+reportMonth,
+reportWeek,
+reportDate
+].forEach(item=>{
+
+    item.addEventListener("change",function(){
+
+        if(window.selectedTeam){
+
+            loadReports(window.selectedTeam);
+
+        }
+
+    });
+
+});
+</script>
+
+</body>
+
+</html>
