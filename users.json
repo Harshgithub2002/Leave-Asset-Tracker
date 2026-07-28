@@ -7,9 +7,9 @@
         "team": "Management"
     },
        {
-        "username": "Bisleri",
-        "password": "Bisleri@123",
-        "team": "HLOS",
+        "username": "Vikram",
+        "password": "Vikram@123",
+        "team": "QA",
         "employee_id": "98709",
         "desk_number": "W-354(A)",
         "device_manager": true,
@@ -31,9 +31,9 @@
         "desk_availability": "A"
     },
     {
-        "username": "Mutton",
-        "password": "Mutton@123",
-        "team": "NHOLS",
+        "username": "Mohan",
+        "password": "Mohan@123",
+        "team": "QA",
         "employee_id": "78458",
         "desk_number": "W-303(Y)",
         "pc_ptag": "EX435t435",
