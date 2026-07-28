@@ -1732,28 +1732,33 @@ def device_registry():
     else:
         registry = []
 
-    # Show only working devices
+    # Get only available working devices
     available_devices = []
 
     for device in devices:
 
-        if device["condition"] != "Working":
+        # Skip non-working devices
+        if device.get("condition") != "Working":
             continue
 
-        already_issued = False
+        in_use = False
 
         for record in registry:
 
             if (
-                    record["sp_name"] == device["sp_name"]
-                    and record["ptag"] == device["ptag"]
-                    and record["status"] == "In Use"
+                    record.get("sp_name") == device.get("sp_name")
+                    and record.get("ptag") == device.get("ptag")
+                    and record.get("status") == "In Use"
             ):
-                already_issued = True
+                in_use = True
                 break
 
-        if not already_issued:
-            available_devices.append(device)
+        if not in_use:
+            device["original_index"] = devices.index(device)
+            device_copy = device.copy()
+            device_copy["original_index"] = devices.index(device)
+            available_devices.append(device_copy)
+
     return render_template(
         "device_registry.html",
         devices=available_devices,
@@ -1774,76 +1779,119 @@ def issue_device():
     with open("devices.json", "r") as f:
         devices = json.load(f)
 
-    index = int(request.form["selected_device"])
-    device = devices[index]
+    selected_devices = request.form.get("selected_devices")
+
+    if not selected_devices:
+        flash("Please select at least one device.", "error")
+        return redirect(url_for("device_registry"))
+
+    selected_ptags = selected_devices.split(",")
 
     username = session.get("username")
 
-    # -------------------------------
-    # Validation 1:
-    # Device already assigned to anyone
-    # -------------------------------
-    for record in registry:
+    from datetime import datetime
 
-        if (
-                record.get("sp_name") == device["sp_name"]
-                and record.get("ptag") == device["ptag"]
-                and record.get("status") == "In Use"
-        ):
-            flash(
-                "This device is already assigned to another user and is currently In Use.",
-                "error"
-            )
+    issue_date = request.form.get("issue_date")
 
-            return redirect(url_for("device_registry"))
+    if not issue_date:
+        flash("Please select an Issue Date.", "error")
+        return redirect(url_for("device_registry"))
+
+    today = datetime.today().date()
+    selected_date = datetime.strptime(issue_date, "%Y-%m-%d").date()
+
+    if selected_date < today:
+        flash("Issue Date cannot be earlier than today.", "error")
+        return redirect(url_for("device_registry"))
 
     # -------------------------------
-    # Validation 2:
-    # Same user trying again
-    # -------------------------------
-    for record in registry:
 
-        if (
-                record.get("username") == username
-                and record.get("sp_name") == device["sp_name"]
-                and record.get("ptag") == device["ptag"]
-                and record.get("status") == "In Use"
-        ):
-            flash(
-                "You have already registered this device. Please return it before registering it again.",
-                "error"
-            )
-
-            return redirect(url_for("device_registry"))
+    # Process selected devices
 
     # -------------------------------
-    # Save record
-    # -------------------------------
-    registry.append({
 
-        "username": username,
+    for ptag in selected_ptags:
 
-        "sp_name": device["sp_name"],
+        device = next(
+            (d for d in devices if d["ptag"] == ptag),
+            None
+        )
 
-        "ptag": device["ptag"],
+        if device is None:
+            continue
 
-        "location": device["location"],
+        skip_device = False
 
-        "issue_date": request.form["issue_date"],
+        # Check whether device is already In Use
 
-        "return_date": "",
+        for record in registry:
 
-        "status": "In Use"
+            if (
 
-    })
+                    record.get("sp_name") == device["sp_name"]
+
+                    and record.get("ptag") == device["ptag"]
+
+                    and record.get("status") == "In Use"
+
+            ):
+                skip_device = True
+
+                break
+
+        if skip_device:
+            continue
+
+        # Check same user already has this device
+
+        duplicate = False
+
+        for record in registry:
+
+            if (
+
+                    record.get("username") == username
+
+                    and record.get("sp_name") == device["sp_name"]
+
+                    and record.get("ptag") == device["ptag"]
+
+                    and record.get("status") == "In Use"
+
+            ):
+                duplicate = True
+
+                break
+
+        if duplicate:
+            continue
+
+        registry.append({
+
+            "username": username,
+
+            "sp_name": device["sp_name"],
+
+            "ptag": device["ptag"],
+
+            "location": device["location"],
+
+            "issue_date": issue_date,
+
+            "return_date": "",
+
+            "status": "In Use"
+
+        })
 
     with open("device_registry.json", "w") as f:
         json.dump(registry, f, indent=4)
 
-    flash("Device issued successfully.", "success")
+    flash("Selected devices issued successfully.", "success")
 
     return redirect(url_for("device_registry"))
 
+#======
 
 @app.route("/return_device/<int:index>", methods=["POST"])
 def return_device(index):
@@ -1860,8 +1908,27 @@ def return_device(index):
 
         return redirect(url_for("device_registry"))
 
+    from datetime import datetime
+
+    return_date = request.form["return_date"]
+
+    issue_date = registry[index]["issue_date"]
+
+    return_dt = datetime.strptime(return_date, "%Y-%m-%d").date()
+    issue_dt = datetime.strptime(issue_date, "%Y-%m-%d").date()
+
+    today = datetime.today().date()
+
+    if return_dt < issue_dt:
+        flash("Return Date cannot be earlier than the Issue Date.", "error")
+        return redirect(url_for("device_registry"))
+
+    if return_dt < today:
+        flash("Return Date cannot be earlier than today.", "error")
+        return redirect(url_for("device_registry"))
+
     registry[index]["status"] = "Returned"
-    registry[index]["return_date"] = request.form["return_date"]
+    registry[index]["return_date"] = return_date
 
     with open("device_registry.json", "w") as f:
         json.dump(registry, f, indent=4)
@@ -1869,7 +1936,7 @@ def return_device(index):
     flash("Device returned successfully.", "success")
 
     return redirect(url_for("device_registry"))
-
+#============================================================
 @app.route("/get_report")
 def get_report():
 
