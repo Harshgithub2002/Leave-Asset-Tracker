@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Leave Management</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+.styled-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.styled-table thead tr {
+    background-color: #4B6CB7;
+    color: #ffffff;
+}
+
+.styled-table th, .styled-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.styled-table tbody tr:nth-child(even) {
+    background-color: #f3f3f3;
+}
+
+.accepted {
+    color: green;
+    font-weight: bold;
+}
+
+.pending {
+    color: orange;
+    font-weight: bold;
+}
+
+.rejected {
+    color: red;
+    font-weight: bold;
+}
+
+.menu-link {
+    cursor: pointer;
+}
+
+</style>
+
+<script>
+
+function showApplyLeave() {
+    document.getElementById("applySection").style.display = "block";
+    document.getElementById("requestSection").style.display = "none";
+}
+
+function showYourRequests() {
+    document.getElementById("applySection").style.display = "none";
+    document.getElementById("requestSection").style.display = "block";
+}
+
+/* ================= DATE VALIDATION (FIXED ONLY THIS) ================= */
+
+function validateDates() {
+    var fromDate = document.getElementById("from_date").value;
+    var toDate = document.getElementById("to_date").value;
+
+    if (fromDate && toDate) {
+
+        // Convert to Date objects
+        var from = new Date(fromDate);
+        var to = new Date(toDate);
+
+        // ✅ Correct comparison
+        if (to < from) {
+            alert("To Date cannot be earlier than From Date!");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/* Automatically restrict To Date */
+function setMinToDate() {
+    var fromDate = document.getElementById("from_date").value;
+    document.getElementById("to_date").min = fromDate;
+}
+
+</script>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+<h2>Tracker</h2>
+<ul>
+<li><a href="/dashboard">Dashboard</a></li>
+
+<li><a class="menu-link" onclick="showApplyLeave()">Apply Leave</a></li>
+
+<li><a class="menu-link" onclick="showYourRequests()">Your Requests</a></li>
+
+<li><a href="/assets">Assets</a></li>
+</ul>
+</div>
+
+<div class="main-content">
+<h2>Welcome {{ session['username'] }}</h2>
+
+<!-- ================= APPLY LEAVE SECTION ================= -->
+
+<div id="applySection">
+
+<form method="POST" action="/apply_leave" onsubmit="return validateDates()">
+
+<label>From Date</label>
+<input type="date" id="from_date" name="from_date" required onchange="setMinToDate()">
+
+<label>To Date</label>
+<input type="date" id="to_date" name="to_date" required>
+
+<label>Select Team</label>
+<select name="team" required>
+<option value="">Select Team</option>
+<option value="Testing">Testing</option>
+<option value="Development">Development</option>
+<option value="HR">HR</option>
+</select>
+
+<label>Leave/WFH Type</label>
+<select name="leave_type" required>
+<option value="Planned Leave">Planned Leave</option>
+<option value="Unplanned Leave">Unplanned Leave</option>
+</select>
+
+<label>Reason</label>
+<input type="text" name="reason" placeholder="Enter Reason" required>
+
+<button type="submit">Submit Request</button>
+
+</form>
+
+</div>
+
+<!-- ================= YOUR REQUESTS SECTION ================= -->
+
+<div id="requestSection" style="display:none;">
+
+<h3>Your Requests</h3>
+
+<table class="styled-table">
+<thead>
+<tr>
+<th>S.No</th>
+<th>Emp Name</th>
+<th>Team</th>
+<th>Leave/WFH Type</th>
+<th>From Date</th>
+<th>To Date</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% if requests %}
+
+{% for req in requests %}
+<tr>
+<td>{{ loop.index }}</td>
+<td>{{ req.username }}</td>
+<td>{{ req.team }}</td>
+<td>{{ req.leave_type }}</td>
+<td>{{ req.from_date }}</td>
+<td>{{ req.to_date }}</td>
+<td class="
+{% if req.status == 'Accepted' %}accepted
+{% elif req.status == 'Pending' %}pending
+{% else %}rejected
+{% endif %}
+">
+{{ req.status }}
+</td>
+</tr>
+{% endfor %}
+
+{% else %}
+
+<tr>
+<td colspan="7" style="text-align:center;">No Requests Found</td>
+</tr>
+
+{% endif %}
+
+</tbody>
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>
+ 

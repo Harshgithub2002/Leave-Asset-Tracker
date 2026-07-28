@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Device Details</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    background:#0f172a;
+    color:#fff;
+    display:flex;
+    min-height:100vh;
+    overflow-x:hidden;
+
+}
+
+/* ==================================
+SIDEBAR
+================================== */
+
+.sidebar{
+
+    width:250px;
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    background:linear-gradient(180deg,#111827,#1e293b);
+    padding:28px 22px;
+    box-shadow:6px 0 20px rgba(0,0,0,.25);
+    overflow-y:auto;
+    z-index:100;
+
+}
+
+.sidebar h2{
+
+    text-align:center;
+    color:#60a5fa;
+    margin-bottom:35px;
+    font-size:24px;
+    font-weight:700;
+
+}
+
+.sidebar a{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    color:white;
+    padding:14px 18px;
+    margin-bottom:10px;
+    border-radius:12px;
+    transition:.3s;
+
+}
+
+.sidebar a:hover{
+
+    background:#2563eb;
+    transform:translateX(6px);
+
+}
+
+.sidebar .active{
+
+    background:#2563eb;
+    box-shadow:0 8px 20px rgba(37,99,235,.35);
+
+}
+
+/* ==================================
+MAIN
+================================== */
+
+.main{
+
+    margin-left:250px;
+    width:calc(100% - 250px);
+    padding:35px;
+
+}
+
+/* ==================================
+HEADER
+================================== */
+
+.header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:28px;
+
+}
+
+.header h1{
+
+    font-size:34px;
+    color:#60a5fa;
+    font-weight:700;
+
+}
+
+.header p{
+
+    color:#cbd5e1;
+    margin-top:8px;
+    font-size:15px;
+
+}
+
+/* ==================================
+COMMON CARD
+================================== */
+
+.card{
+
+    background:#1e293b;
+    border-radius:18px;
+    padding:24px;
+    margin-bottom:25px;
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 8px 25px rgba(0,0,0,.18);
+
+}
+
+.card:hover{
+
+    box-shadow:0 18px 35px rgba(37,99,235,.12);
+
+}
+
+/* ==================================
+DEVICE FORM
+================================== */
+
+.device-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:22px;
+    margin-top:15px;
+
+}
+
+.device-grid label{
+
+    display:block;
+    margin-bottom:8px;
+    font-size:14px;
+    font-weight:600;
+    color:#dbeafe;
+
+}
+
+.device-grid input,
+.device-grid select,
+textarea{
+
+    width:100%;
+    padding:14px 16px;
+    border:1px solid #334155;
+    border-radius:12px;
+    background:#0f172a;
+    color:white;
+    font-size:14px;
+    transition:.25s;
+
+}
+
+.device-grid input::placeholder,
+textarea::placeholder{
+
+    color:#94a3b8;
+
+}
+
+.device-grid input:focus,
+.device-grid select:focus,
+textarea:focus{
+
+    outline:none;
+    border-color:#3b82f6;
+    box-shadow:0 0 0 4px rgba(59,130,246,.15);
+
+}
+
+textarea{
+
+    resize:vertical;
+    min-height:110px;
+
+}
+
+/* ==================================
+BUTTONS
+================================== */
+
+.primary-btn{
+
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+    color:white;
+    border:none;
+    padding:13px 30px;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s;
+    box-shadow:0 8px 20px rgba(37,99,235,.25);
+
+}
+
+.primary-btn:hover{
+
+    transform:translateY(-2px);
+    box-shadow:0 15px 28px rgba(37,99,235,.35);
+
+}
+
+/* ==================================
+SEARCH & FILTER
+================================== */
+
+#searchInput,
+#locationFilter{
+
+    background:#0f172a;
+    color:white;
+    border:1px solid #334155;
+    border-radius:12px;
+    padding:14px 16px;
+    font-size:14px;
+    transition:.25s;
+
+}
+
+#searchInput{
+
+    min-width:320px;
+
+}
+
+#searchInput:focus,
+#locationFilter:focus{
+
+    outline:none;
+    border-color:#3b82f6;
+    box-shadow:0 0 0 4px rgba(59,130,246,.15);
+
+}
+
+#locationFilter{
+
+    min-width:220px;
+
+}
+
+/* ==================================
+FORM SECTION TITLE
+================================== */
+
+.card h2{
+
+    color:#60a5fa;
+    font-size:22px;
+    font-weight:700;
+    margin-bottom:22px;
+
+}
+
+/* ==================================
+DEVICE TABLE
+================================== */
+
+.device-table{
+
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    overflow:hidden;
+    border-radius:16px;
+
+}
+
+.device-table thead th{
+
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+    color:white;
+    padding:16px;
+    text-align:center;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.3px;
+    position:sticky;
+    top:0;
+
+}
+
+.device-table tbody td{
+
+    padding:16px;
+    text-align:center;
+    background:#1f2937;
+    border-bottom:1px solid #334155;
+    transition:.25s;
+
+}
+
+.device-table tbody tr:hover td{
+
+    background:#263447;
+
+}
+
+/* ==================================
+STATUS BADGES
+================================== */
+
+.status-working{
+
+    display:inline-block;
+    background:#16a34a;
+    color:white;
+    padding:8px 16px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+
+}
+
+.status-notworking{
+
+    display:inline-block;
+    background:#dc2626;
+    color:white;
+    padding:8px 16px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+
+}
+
+/* ==================================
+ACTION BUTTONS
+================================== */
+
+.edit-btn{
+
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:10px;
+    padding:9px 18px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.25s;
+    margin-right:8px;
+
+}
+
+.edit-btn:hover{
+
+    background:#1d4ed8;
+    transform:translateY(-2px);
+
+}
+
+.delete-btn{
+
+    background:#dc2626;
+    color:white;
+    border:none;
+    border-radius:10px;
+    padding:9px 18px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.25s;
+
+}
+
+.delete-btn:hover{
+
+    background:#b91c1c;
+    transform:translateY(-2px);
+
+}
+
+/* ==================================
+EDIT MODAL
+================================== */
+
+#editModal{
+
+    backdrop-filter:blur(6px);
+
+}
+
+#editModal .card{
+
+    width:720px;
+    max-width:95%;
+    animation:popup .25s ease;
+
+}
+
+@keyframes popup{
+
+    from{
+
+        opacity:0;
+        transform:scale(.92);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:scale(1);
+
+    }
+
+}
+
+/* ==================================
+SCROLLBAR
+================================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+    height:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#111827;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#475569;
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#64748b;
+
+}
+
+/* ==================================
+RESPONSIVE
+================================== */
+
+@media(max-width:992px){
+
+    .sidebar{
+
+        width:90px;
+        padding:20px 10px;
+
+    }
+
+    .sidebar h2{
+
+        display:none;
+
+    }
+
+    .sidebar a{
+
+        justify-content:center;
+        font-size:13px;
+        padding:14px 10px;
+
+    }
+
+    .main{
+
+        margin-left:90px;
+        width:calc(100% - 90px);
+        padding:20px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .header{
+
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+
+    }
+
+    .device-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .device-table{
+
+        display:block;
+        overflow-x:auto;
+        white-space:nowrap;
+
+    }
+
+    #searchInput{
+
+        min-width:100%;
+
+    }
+
+    #locationFilter{
+
+        width:100%;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .main{
+
+        padding:15px;
+
+    }
+
+    .card{
+
+        padding:18px;
+
+    }
+
+    .header h1{
+
+        font-size:26px;
+
+    }
+
+}
+
+.registry-btn{
+
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+    color:#fff;
+    text-decoration:none;
+    padding:12px 22px;
+    border-radius:12px;
+    font-weight:600;
+    transition:.3s;
+
+}
+
+.registry-btn:hover{
+
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(59,130,246,.35);
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+{% if session.get("role")=="admin" %}
+
+<h2>🛠 Admin Panel</h2>
+
+<a href="{{ url_for('admin_dashboard') }}">
+🏠 Dashboard
+</a>
+
+<a href="{{ url_for('admin_requests') }}">
+📋 Requests
+</a>
+
+<a href="{{ url_for('admin_users') }}">
+👥 Users
+</a>
+
+<a href="{{ url_for('admin_reports') }}">
+📊 Reports
+</a>
+
+<a href="{{ url_for('devices') }}" class="active">
+💻 Device Details
+</a>
+
+<a href="{{ url_for('logout') }}">
+🚪 Logout
+</a>
+
+{% else %}
+
+<h2>👤 User Panel</h2>
+
+<a href="{{ url_for('user_dashboard') }}">
+🏠 Dashboard
+</a>
+
+<a href="{{ url_for('devices') }}" class="active">
+💻 Device Details
+</a>
+
+<a href="{{ url_for('logout') }}">
+🚪 Logout
+</a>
+
+{% endif %}
+
+</div>
+
+<div class="main">
+
+<div class="header">
+
+<div>
+
+<h1>📱 Device Inventory</h1>
+
+<p>
+Manage all testing devices from one centralized dashboard.
+</p>
+
+</div>
+
+{% if current_user.get("device_manager", False) %}
+
+<button
+class="primary-btn"
+onclick="document.getElementById('add-device-card').scrollIntoView({behavior:'smooth'});">
+
+➕ Add Device
+
+</button>
+
+{% endif %}
+
+</div>
+
+<!-- ==========================
+SUMMARY CARDS
+========================== -->
+
+<div class="device-grid" style="margin-bottom:30px;">
+
+<div class="card" style="text-align:center;">
+
+<h2 style="margin-bottom:10px;">{{ devices|length }}</h2>
+
+<p>Total Devices</p>
+
+</div>
+
+<div class="card" style="text-align:center;">
+
+<h2 style="margin-bottom:10px;">
+{{ devices|selectattr("condition","equalto","Working")|list|length }}
+</h2>
+
+<p>Working</p>
+
+</div>
+
+<div class="card" style="text-align:center;">
+
+<h2 style="margin-bottom:10px;">
+{{ devices|selectattr("condition","equalto","Not Working")|list|length }}
+</h2>
+
+<p>Not Working</p>
+
+</div>
+
+<div class="card" style="text-align:center;">
+
+<h2 style="margin-bottom:10px;">
+{{ devices|selectattr("location","equalto","ODC")|list|length }}
+</h2>
+
+<p>ODC Devices</p>
+
+</div>
+
+<div class="card" style="text-align:center;">
+
+<h2 style="margin-bottom:10px;">
+{{ devices|selectattr("location","equalto","QC")|list|length }}
+</h2>
+
+<p>QC Devices</p>
+
+</div>
+
+</div>
+
+<!-- ==========================
+ADD DEVICE
+========================== -->
+
+{% if current_user.get("device_manager", False) %}
+
+<div class="card" id="add-device-card">
+
+<h2 style="margin-bottom:20px;">
+➕ Add New Device
+</h2>
+
+<form action="{{ url_for('add_device') }}" method="POST">
+
+<div class="device-grid">
+
+<div>
+
+<label>SP Name</label>
+
+<input
+type="text"
+name="sp_name"
+required>
+
+</div>
+
+<div>
+
+<label>PTAG</label>
+
+<input
+type="text"
+name="ptag"
+required>
+
+</div>
+
+<div>
+
+<label>Condition</label>
+
+<select
+id="condition"
+name="condition"
+onchange="toggleReason()"
+required>
+
+<option value="Working">
+Working
+</option>
+
+<option value="Not Working">
+Not Working
+</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>Location</label>
+
+<select
+name="location"
+required>
+
+<option value="ODC">
+ODC
+</option>
+
+<option value="QC">
+QC
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div
+id="reasonBox"
+style="display:none;margin-top:20px;">
+
+<label>
+Reason
+</label>
+
+<textarea
+id="reason"
+name="comments"
+rows="4"
+placeholder="Why is the device not working?">
+</textarea>
+
+</div>
+
+<div style="margin-top:25px;">
+
+<button
+class="primary-btn"
+type="submit">
+
+Save Device
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+{% endif %}
+
+<!-- ==========================
+SEARCH & FILTER
+========================== -->
+
+<div class="card">
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:15px;">
+
+<div style="width:100%;">
+
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;">
+
+<div>
+
+<h2 style="margin:0;color:#60a5fa;">
+🔍 Search Devices
+</h2>
+
+<p style="margin-top:6px;color:#94a3b8;font-size:14px;">
+Search by SP Name, PTAG or filter by location.
+</p>
+
+</div>
+
+<a href="{{ url_for('device_registry') }}" class="registry-btn">
+📋 Device Registry
+</a>
+
+</div>
+
+</div>
+</div>
+
+<div
+style="
+display:flex;
+gap:18px;
+flex-wrap:wrap;
+align-items:center;
+">
+
+<div style="flex:2;min-width:320px;">
+
+<input
+id="searchInput"
+type="text"
+placeholder="🔍 Search by SP Name or PTAG">
+
+</div>
+
+<div style="min-width:220px;">
+
+<select
+id="locationFilter">
+
+<option value="">
+📍 All Locations
+</option>
+
+<option value="ODC">
+🏢 ODC
+</option>
+
+<option value="QC">
+🏭 QC
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ==========================
+DEVICE TABLE
+========================== -->
+
+<div class="card">
+
+<table class="device-table">
+
+<thead>
+
+<tr>
+
+<th>#</th>
+
+<th>SP Name</th>
+
+<th>PTAG</th>
+
+<th>Condition</th>
+
+<th>Location</th>
+
+<th>Added By</th>
+
+<th>Remarks</th>
+
+{% if current_user.get("device_manager", False) %}
+<th>Actions</th>
+{% endif %}
+
+</tr>
+
+</thead>
+
+<tbody id="deviceTable">
+
+{% for d in devices %}
+
+<tr style="transition:.25s;">
+
+<td>
+
+<strong style="color:#60a5fa;">
+
+{{ loop.index }}
+
+</strong>
+
+</td>
+
+<td>
+
+<strong style="font-size:15px;">
+
+{{ d.sp_name }}
+
+</strong>
+
+</td>
+
+<td>
+
+<span style="font-family:monospace;font-size:14px;color:#93c5fd;">
+
+{{ d.ptag }}
+
+</span>
+
+</td>
+
+<td>
+
+{% if d.condition == "Working" %}
+
+<span class="status-working">
+🟢 Working
+</span>
+
+{% else %}
+
+<span class="status-notworking">
+🔴 Not Working
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+<span style="
+background:#1e3a8a;
+padding:7px 14px;
+border-radius:20px;
+font-weight:600;
+display:inline-block;
+min-width:70px;
+">
+
+{{ d.location }}
+
+</span>
+
+</td>
+
+<td>
+
+<span style="
+background:#334155;
+padding:7px 14px;
+border-radius:20px;
+display:inline-block;
+font-size:13px;
+">
+
+👤 {{ d.added_by }}
+
+</span>
+
+</td>
+
+<td>
+
+{% if d.comments %}
+
+<span style="color:#facc15;">
+
+{{ d.comments }}
+
+</span>
+
+{% else %}
+
+<span style="color:#64748b;">
+
+—
+
+</span>
+
+{% endif %}
+
+</td>
+
+{% if current_user.get("device_manager", False) %}
+
+<td>
+
+<button
+type="button"
+class="edit-btn"
+data-index="{{ loop.index0 }}"
+data-sp="{{ d.sp_name }}"
+data-ptag="{{ d.ptag }}"
+data-condition="{{ d.condition }}"
+data-location="{{ d.location }}"
+data-comments="{{ d.comments }}"
+>
+
+Edit
+
+</button>
+
+<a
+href="{{ url_for('delete_device', index=loop.index0) }}"
+onclick="return confirm('Delete this device?');">
+
+<button
+type="button"
+class="delete-btn">
+
+Delete
+
+</button>
+
+</a>
+
+</td>
+
+{% endif %}
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% if current_user.get("device_manager", False) %}
+
+<div id="editModal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(15,23,42,.75);
+backdrop-filter:blur(8px);
+justify-content:center;
+align-items:center;
+z-index:999;
+padding:20px;
+">
+
+<div class="card" style="
+width:760px;
+max-width:96%;
+border-radius:20px;
+padding:30px;
+box-shadow:0 20px 50px rgba(0,0,0,.35);
+">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+">
+
+<div>
+
+<h2 style="
+margin:0;
+color:#60a5fa;
+">
+
+✏️ Edit Device
+
+</h2>
+
+<p style="
+margin-top:6px;
+color:#94a3b8;
+font-size:14px;
+">
+
+Update the selected device details.
+
+</p>
+
+</div>
+
+<button
+type="button"
+onclick="closeModal()"
+style="
+background:none;
+border:none;
+font-size:28px;
+color:#94a3b8;
+cursor:pointer;
+">
+
+&times;
+
+</button>
+
+</div>
+
+<form id="editForm" method="POST">
+
+<div class="device-grid">
+
+<div>
+<label>SP Name</label>
+<input id="editSP" name="sp_name" required>
+</div>
+
+<div>
+<label>PTAG</label>
+<input id="editPTAG" name="ptag" required>
+</div>
+
+<div>
+<label>Condition</label>
+
+<select
+id="editCondition"
+name="condition"
+onchange="toggleEditReason()">
+
+<option value="Working">Working</option>
+<option value="Not Working">Not Working</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>Location</label>
+
+<select
+id="editLocation"
+name="location">
+
+<option value="ODC">ODC</option>
+<option value="QC">QC</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div
+id="editReasonBox"
+style="display:none;margin-top:20px;">
+
+<label>Reason</label>
+
+<textarea
+id="editReason"
+name="comments"
+rows="4">
+</textarea>
+
+</div>
+
+<div
+style="
+display:flex;
+justify-content:flex-end;
+align-items:center;
+gap:15px;
+margin-top:30px;
+padding-top:20px;
+border-top:1px solid #334155;
+">
+
+<button
+class="primary-btn"
+type="submit">
+
+💾 Save Changes
+
+</button>
+
+<button
+type="button"
+class="delete-btn"
+onclick="closeModal()">
+
+✖ Cancel
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+{% endif %}
+</div>
+</div>
+<script>
+
+function toggleReason(){
+
+    console.log("toggleReason called");
+
+    const condition=document.getElementById("condition");
+    const box=document.getElementById("reasonBox");
+    const reason=document.getElementById("reason");
+
+    console.log(condition.value);
+
+    if(condition.value==="Not Working"){
+
+        box.style.display="block";
+        reason.required=true;
+
+    }else{
+
+        box.style.display="none";
+        reason.required=false;
+        reason.value="";
+
+    }
+
+}
+function toggleEditReason(){
+
+    const condition=document.getElementById("editCondition");
+    const box=document.getElementById("editReasonBox");
+    const reason=document.getElementById("editReason");
+
+    if(condition.value==="Not Working"){
+
+        box.style.display="block";
+        reason.required=true;
+
+    }else{
+
+        box.style.display="none";
+        reason.required=false;
+        reason.value="";
+
+    }
+
+}
+
+const editModal = document.getElementById("editModal");
+
+if (editModal) {
+
+    document.querySelectorAll(".edit-btn").forEach(function(btn){
+
+        btn.onclick=function(){
+
+            editModal.style.display="flex";
+
+            document.getElementById("editSP").value=this.dataset.sp;
+            document.getElementById("editPTAG").value=this.dataset.ptag;
+            document.getElementById("editCondition").value=this.dataset.condition;
+            document.getElementById("editLocation").value=this.dataset.location;
+
+            document.getElementById("editReason").value =
+                this.dataset.comments && this.dataset.comments !== "None"
+                ? this.dataset.comments
+                : "";
+
+            document.getElementById("editForm").action="/edit_device/"+this.dataset.index;
+
+            toggleEditReason();
+
+        }
+
+    });
+
+}
+function closeModal(){
+
+    editModal.style.display="none";
+
+}
+
+window.onclick=function(e){
+
+    if(e.target===editModal){
+
+        closeModal();
+
+    }
+
+}
+
+const searchInput = document.getElementById("searchInput");
+const locationFilter = document.getElementById("locationFilter");
+
+function filterTable() {
+
+    const keyword = searchInput.value.trim().toLowerCase();
+    const loc = locationFilter.value.trim().toLowerCase();
+
+    document.querySelectorAll("#deviceTable tr").forEach(function(row) {
+
+        const sp = row.cells[1].textContent.trim().toLowerCase();
+        const ptag = row.cells[2].textContent.trim().toLowerCase();
+        const rowLoc = row.cells[4].textContent.trim().toLowerCase();
+
+        const okSearch = sp.includes(keyword) || ptag.includes(keyword);
+        const okLocation = (loc === "") || (rowLoc === loc);
+
+        row.style.display = (okSearch && okLocation) ? "" : "none";
+    });
+
+}
+
+if (searchInput) {
+    searchInput.addEventListener("keyup", filterTable);
+}
+
+if (locationFilter) {
+    locationFilter.addEventListener("change", filterTable);
+}
+
+toggleReason();
+
+{% if current_user.get("device_manager", False) %}
+toggleEditReason();
+{% endif %}
+
+</script>
+
+</body>
+</html>

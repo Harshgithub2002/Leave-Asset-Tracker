@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Edit Device</title>
+
+</head>
+
+<body>
+
+<h2>Edit Device</h2>
+
+<form method="POST">
+
+<input
+name="sp_name"
+value="{{device.sp_name}}"
+required>
+
+<input
+name="ptag"
+value="{{device.ptag}}"
+required>
+
+<select
+name="condition"
+id="condition">
+
+<option
+{% if device.condition=="Working" %}
+selected
+{% endif %}>
+
+Working
+
+</option>
+
+<option
+{% if device.condition=="Not Working" %}
+selected
+{% endif %}>
+
+Not Working
+
+</option>
+
+</select>
+
+<select name="location">
+
+<option
+{% if device.location=="ODC" %}
+selected
+{% endif %}>
+
+ODC
+
+</option>
+
+<option
+{% if device.location=="QC" %}
+selected
+{% endif %}>
+
+QC
+
+</option>
+
+</select>
+<textarea
+name="comments"
+id="comments"
+placeholder="Reason">
+
+{{device.comments}}
+
+</textarea>
+<button>
+
+Save
+
+</button>
+
+</form>
+<script>
+
+const spFilter=document.getElementById("spFilter");
+
+const locationFilter=document.getElementById("locationFilter");
+
+const search=document.getElementById("search");
+
+const rows=document.querySelectorAll("#deviceTable tr");
+
+let spSet=new Set();
+
+rows.forEach(row=>{
+
+    spSet.add(row.cells[0].innerText);
+
+});
+
+spSet.forEach(sp=>{
+
+    let option=document.createElement("option");
+
+    option.value=sp;
+
+    option.text=sp;
+
+    spFilter.appendChild(option);
+
+});
+
+function applyFilters(){
+
+    rows.forEach(row=>{
+
+        let sp=row.cells[0].innerText;
+
+        let ptag=row.cells[1].innerText;
+
+        let location=row.cells[3].innerText;
+
+        let show=true;
+
+        if(
+
+            spFilter.value &&
+            sp!=spFilter.value
+
+        ){
+
+            show=false;
+
+        }
+
+        if(
+
+            locationFilter.value &&
+            location!=locationFilter.value
+
+        ){
+
+            show=false;
+
+        }
+
+        if(
+
+            search.value &&
+            !ptag.toLowerCase().includes(
+                search.value.toLowerCase()
+            )
+
+        ){
+
+            show=false;
+
+        }
+
+        row.style.display=show?"":"none";
+
+    });
+
+}
+
+spFilter.onchange=applyFilters;
+
+locationFilter.onchange=applyFilters;
+
+search.onkeyup=applyFilters;
+
+</script>
+<script>
+
+const condition =
+
+document.getElementById("condition");
+
+const comments =
+
+document.getElementById("comments");
+
+function toggleComments(){
+
+    if(condition.value=="Not Working"){
+
+        comments.style.display="block";
+
+        comments.required=true;
+
+    }
+
+    else{
+
+        comments.style.display="none";
+
+        comments.required=false;
+
+    }
+
+}
+
+toggleComments();
+
+condition.addEventListener(
+
+"change",
+
+toggleComments
+
+);
+
+</script>
+
+</body>
+
+</html>
