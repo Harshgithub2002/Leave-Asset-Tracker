@@ -3,8 +3,30 @@ import re
 import json
 import os
 from datetime import datetime, date, timedelta
+import calendar
+from werkzeug.utils import secure_filename
+import uuid
+
 
 app = Flask(__name__)
+
+REPORT_FOLDER = "static/uploads/reports"
+
+ALLOWED_REPORT_EXTENSIONS = {
+    "pdf",
+    "doc",
+    "docx",
+    "xls",
+    "xlsx",
+    "ppt",
+    "pptx",
+    "txt",
+    "png",
+    "jpg",
+    "jpeg"
+}
+
+os.makedirs(REPORT_FOLDER, exist_ok=True)
 
 app.secret_key = "secretkey123"
 
@@ -57,6 +79,71 @@ def load_requests():
 def save_requests(data):
     with open(REQUEST_FILE, "w") as f:
         json.dump(data, f, indent=4)
+
+
+REPORTS_FILE = "reports.json"
+
+DEVICES_FILE = "devices.json"
+
+
+def load_reports():
+    if not os.path.exists(REPORTS_FILE):
+        return []
+
+    with open(REPORTS_FILE, "r") as f:
+        return json.load(f)
+
+
+def save_reports(reports):
+    with open(REPORTS_FILE, "w") as f:
+        json.dump(reports, f, indent=4)
+
+# ======================================
+# DEVICE FUNCTIONS
+# ======================================
+
+def load_devices():
+
+    if not os.path.exists(DEVICES_FILE):
+
+        return []
+
+    with open(DEVICES_FILE, "r") as f:
+
+        return json.load(f)
+
+
+def save_devices(devices):
+
+    with open(DEVICES_FILE, "w") as f:
+
+        json.dump(devices, f, indent=4)
+
+# ==============================
+# REPORT JSON
+# ==============================
+
+REPORT_FILE = "reports.json"
+
+
+def load_reports():
+    if not os.path.exists(REPORT_FILE):
+        return []
+
+    with open(REPORT_FILE, "r") as f:
+        return json.load(f)
+
+
+def save_reports(data):
+    with open(REPORT_FILE, "w") as f:
+        json.dump(data, f, indent=4)
+
+
+def allowed_report(filename):
+    return (
+            "." in filename and
+            filename.rsplit(".", 1)[1].lower() in ALLOWED_REPORT_EXTENSIONS
+    )
 
 
 @app.route("/")
@@ -1004,6 +1091,19 @@ def user_dashboard():
             profile = user
 
             break
+    devices = load_devices()
+    # ==========================================
+
+    # REPORT YEARS
+
+    # ==========================================
+
+    current_year = datetime.now().year
+
+    years = []
+
+    for year in range(current_year - 1, current_year + 6):
+        years.append(year)
 
     return render_template(
 
@@ -1026,9 +1126,13 @@ def user_dashboard():
         rejected_wfh = rejected_wfh,
         rejected_leave = rejected_leave,
 
-        approved_total = approved_total,
-        rejected_total = rejected_total
+        years=years,
 
+        approved_total=approved_total,
+        rejected_total=rejected_total,
+
+        devices=devices,
+        current_user=profile
     )
 
 
@@ -1063,15 +1167,172 @@ def admin_dashboard():
         long_leave_requests=long_leave_requests
     )
 
-###############admin_reports##############
-@app.route("/admin_reports")
+@app.route("/admin/reports")
 def admin_reports():
+
     if session.get("role") != "admin":
         return redirect(url_for("login"))
 
-    return render_template("admin_reports.html")
+    reports = load_reports()
+    users = load_users()
 
+    years = sorted(
+        list(set(r["year"] for r in reports)),
+        reverse=True
+    )
 
+    return render_template(
+        "admin_reports.html",
+        reports=reports,
+        users=users,
+        years=years
+    )
+
+@app.route("/devices")
+def devices():
+
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    users = load_users()
+    devices = load_devices()
+
+    current_user = next(
+        (u for u in users if u["username"] == session["username"]),
+        None
+    )
+
+    return render_template(
+        "devices.html",
+        devices=devices,
+        current_user=current_user
+    )
+@app.route("/add_device", methods=["POST"])
+def add_device():
+
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    users = load_users()
+
+    current_user = next(
+        (u for u in users if u["username"] == session["username"]),
+        None
+    )
+
+    if not current_user.get("device_manager", False):
+
+        flash("Permission Denied")
+
+        return redirect(url_for("devices"))
+
+    devices = load_devices()
+
+    devices.append({
+
+        "sp_name": request.form["sp_name"],
+
+        "ptag": request.form["ptag"],
+
+        "condition": request.form["condition"],
+
+        "location": request.form["location"],
+
+        "comments": request.form.get("comments", ""),
+
+        "added_by": session["username"]
+
+    })
+
+    save_devices(devices)
+
+    flash("Device Added Successfully")
+
+    return redirect(url_for("devices"))
+
+@app.route("/delete_device/<int:index>")
+def delete_device(index):
+
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    users = load_users()
+
+    current_user = next(
+        (
+            u for u in users
+            if u["username"] == session["username"]
+        ),
+        None
+    )
+
+    if not current_user.get("device_manager", False):
+
+        flash("Permission Denied")
+
+        return redirect(url_for("devices"))
+
+    devices = load_devices()
+
+    if 0 <= index < len(devices):
+
+        devices.pop(index)
+
+        save_devices(devices)
+
+        flash("Device Deleted Successfully")
+
+    return redirect(url_for("devices"))
+
+@app.route("/edit_device/<int:index>", methods=["GET", "POST"])
+def edit_device(index):
+
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    users = load_users()
+
+    current_user = next(
+        (
+            u for u in users
+            if u["username"] == session["username"]
+        ),
+        None
+    )
+
+    if not current_user.get("device_manager", False):
+
+        flash("Permission Denied")
+
+        return redirect(url_for("devices"))
+
+    devices = load_devices()
+
+    if request.method=="POST":
+
+        devices[index]["sp_name"] = request.form["sp_name"]
+
+        devices[index]["ptag"] = request.form["ptag"]
+
+        devices[index]["condition"] = request.form["condition"]
+
+        devices[index]["location"] = request.form["location"]
+
+        devices[index]["comments"] = request.form.get("comments", "")
+
+        save_devices(devices)
+
+        flash("Device Updated Successfully")
+
+        return redirect(url_for("devices"))
+
+    return render_template(
+
+        "edit_device.html",
+
+        device=devices[index]
+
+    )
 # ==============================
 # ADMIN REQUESTS
 # ==============================
@@ -1303,6 +1564,418 @@ def mark_notifications_seen():
     save_requests(requests_data)
 
     return ""
+
+
+@app.route("/upload_report", methods=["POST"])
+def submit_report():
+
+    if session.get("role") != "user":
+        return {"success": False, "message": "Login required"}
+
+    username = session["username"]
+
+    year = request.form.get("year")
+    month = request.form.get("month")
+    week = request.form.get("week")
+    date = request.form.get("date")
+
+    print("========== REPORT VALUES ==========")
+    print(request.form)
+    print("Year :", repr(year))
+    print("Month:", repr(month))
+    print("Week :", repr(week))
+    print("Date :", repr(date))
+    print("===================================")
+
+    file = request.files.get("report")
+
+    if not file:
+        flash("Please select a report.")
+        return redirect(url_for("user_dashboard", section="reports"))
+
+    if not allowed_report(file.filename):
+        flash("Unsupported file type.")
+        return redirect(url_for("user_dashboard", section="reports"))
+
+    # ----------------------------
+    # Report Type
+    # ----------------------------
+
+    week = (week or "").strip()
+
+    date = (date or "").strip()
+
+    if year and month and week == "" and date == "":
+
+        report_type = "Monthly"
+
+    elif year and month and week != "" and date == "":
+
+        report_type = "Weekly"
+
+    elif year and month and week != "" and date != "":
+
+        report_type = "Daily"
+
+    else:
+
+        flash("Please select valid filters.")
+
+        return redirect(
+
+            url_for(
+
+                "user_dashboard",
+
+                section="reports"
+
+            )
+
+        )
+
+    # ----------------------------
+    # Duplicate Check
+    # ----------------------------
+    reports = load_reports()
+
+    for report in reports:
+
+        if report["username"] != username:
+            continue
+
+        if report["type"] != report_type:
+            continue
+
+        if report_type == "Monthly":
+
+            if (
+                report["year"] == year
+                and
+                report["month"] == month
+            ):
+                flash("Monthly Report Already Uploaded")
+                return redirect(url_for("user_dashboard", section="reports"))
+
+        elif report_type == "Weekly":
+
+            if (
+                report["year"] == year
+                and
+                report["month"] == month
+                and
+                report["week"] == week
+            ):
+                flash("Weekly Report Already Uploaded")
+                return redirect(url_for("user_dashboard", section="reports"))
+
+        else:
+
+            if (
+                report["year"] == year
+                and
+                report["month"] == month
+                and
+                report["week"] == week
+                and
+                report["date"] == date
+            ):
+
+                return {
+                    "success": False,
+                    "message": "Daily Report Already Uploaded"
+                }
+
+    extension = file.filename.rsplit(".", 1)[1].lower()
+
+    filename = str(uuid.uuid4()) + "." + extension
+
+    filepath = os.path.join(REPORT_FOLDER, filename)
+
+    file.save(filepath)
+
+    reports.append({
+
+        "username": username,
+
+        "type": report_type,
+
+        "year": year,
+
+        "month": month,
+
+        "week": week if week else "",
+
+        "date": date if date else "",
+
+        "file": filename,
+
+        "original_name": file.filename
+
+    })
+
+    save_reports(reports)
+
+    flash("Report Uploaded Successfully")
+    return redirect(url_for("user_dashboard", section="reports"))
+
+
+@app.route("/device_registry")
+def device_registry():
+    # Load devices
+    with open("devices.json", "r") as f:
+        devices = json.load(f)
+
+    # Load registry
+    if os.path.exists("device_registry.json"):
+        with open("device_registry.json", "r") as f:
+            registry = json.load(f)
+    else:
+        registry = []
+
+    # Show only working devices
+    available_devices = []
+
+    for device in devices:
+
+        if device["condition"] != "Working":
+            continue
+
+        already_issued = False
+
+        for record in registry:
+
+            if (
+                    record["sp_name"] == device["sp_name"]
+                    and record["ptag"] == device["ptag"]
+                    and record["status"] == "In Use"
+            ):
+                already_issued = True
+                break
+
+        if not already_issued:
+            available_devices.append(device)
+    return render_template(
+        "device_registry.html",
+        devices=available_devices,
+        registry=registry
+    )
+
+
+@app.route("/issue_device", methods=["POST"])
+def issue_device():
+    # Load registry
+    if os.path.exists("device_registry.json"):
+        with open("device_registry.json", "r") as f:
+            registry = json.load(f)
+    else:
+        registry = []
+
+    # Load devices
+    with open("devices.json", "r") as f:
+        devices = json.load(f)
+
+    index = int(request.form["selected_device"])
+    device = devices[index]
+
+    username = session.get("username")
+
+    # -------------------------------
+    # Validation 1:
+    # Device already assigned to anyone
+    # -------------------------------
+    for record in registry:
+
+        if (
+                record.get("sp_name") == device["sp_name"]
+                and record.get("ptag") == device["ptag"]
+                and record.get("status") == "In Use"
+        ):
+            flash(
+                "This device is already assigned to another user and is currently In Use.",
+                "error"
+            )
+
+            return redirect(url_for("device_registry"))
+
+    # -------------------------------
+    # Validation 2:
+    # Same user trying again
+    # -------------------------------
+    for record in registry:
+
+        if (
+                record.get("username") == username
+                and record.get("sp_name") == device["sp_name"]
+                and record.get("ptag") == device["ptag"]
+                and record.get("status") == "In Use"
+        ):
+            flash(
+                "You have already registered this device. Please return it before registering it again.",
+                "error"
+            )
+
+            return redirect(url_for("device_registry"))
+
+    # -------------------------------
+    # Save record
+    # -------------------------------
+    registry.append({
+
+        "username": username,
+
+        "sp_name": device["sp_name"],
+
+        "ptag": device["ptag"],
+
+        "location": device["location"],
+
+        "issue_date": request.form["issue_date"],
+
+        "return_date": "",
+
+        "status": "In Use"
+
+    })
+
+    with open("device_registry.json", "w") as f:
+        json.dump(registry, f, indent=4)
+
+    flash("Device issued successfully.", "success")
+
+    return redirect(url_for("device_registry"))
+
+
+@app.route("/return_device/<int:index>", methods=["POST"])
+def return_device(index):
+    with open("device_registry.json", "r") as f:
+        registry = json.load(f)
+
+    username = session.get("username")
+
+    if registry[index].get("username") != username:
+        flash(
+            "You are not allowed to return a device assigned to another user.",
+            "error"
+        )
+
+        return redirect(url_for("device_registry"))
+
+    registry[index]["status"] = "Returned"
+    registry[index]["return_date"] = request.form["return_date"]
+
+    with open("device_registry.json", "w") as f:
+        json.dump(registry, f, indent=4)
+
+    flash("Device returned successfully.", "success")
+
+    return redirect(url_for("device_registry"))
+
+@app.route("/get_report")
+def get_report():
+
+    if session.get("role") != "user":
+        return {"found": False}
+
+    username = session["username"]
+
+    year = request.args.get("year")
+    month = request.args.get("month")
+    week = request.args.get("week")
+    date = request.args.get("date")
+
+    if year and month and not week and not date:
+
+        report_type = "Monthly"
+
+    elif year and month and week and not date:
+
+        report_type = "Weekly"
+
+    elif year and month and week and date:
+
+        report_type = "Daily"
+
+    else:
+
+        return {"found": False}
+
+    reports = load_reports()
+
+    for report in reports:
+
+        if report["username"] != username:
+            continue
+
+        if report["type"] != report_type:
+            continue
+
+        if report_type == "Monthly":
+
+            if (
+                report["year"] == year
+                and
+                report["month"] == month
+            ):
+
+                return {
+
+                    "found": True,
+
+                    "message": "Monthly Report Already Uploaded",
+
+                    "filename": report["file"],
+
+                    "original_name": report["original_name"]
+
+                }
+
+        elif report_type == "Weekly":
+
+            if (
+                report["year"] == year
+                and
+                report["month"] == month
+                and
+                report["week"] == week
+            ):
+
+                return {
+
+                    "found": True,
+
+                    "message": "Weekly Report Already Uploaded",
+
+                    "filename": report["file"],
+
+                    "original_name": report["original_name"]
+
+                }
+
+        else:
+
+            if (
+                report["year"] == year
+                and
+                report["month"] == month
+                and
+                report["week"] == week
+                and
+                report["date"] == date
+            ):
+
+                return {
+
+                    "found": True,
+
+                    "message": "Daily Report Already Uploaded",
+
+                    "filename": report["file"],
+
+                    "original_name": report["original_name"]
+
+                }
+
+    return {"found": False}
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
